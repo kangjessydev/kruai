@@ -30,9 +30,10 @@ Jangan mengubah `SKILL.md` sendiri; `role-retro` yang mengusulkan setelah pola b
 - Hanya peran pembangun (frontend/backend/database) yang boleh mengubah kode.
   Peran lain hanya membaca dan melapor.
 - Dilarang membatalkan isi `docs/decisions.md` tanpa persetujuan user.
-- Peran **tidak boleh membuat peran/skill/MCP/tool baru**. Boleh mengusulkan lewat
-  handoff `...-to-NEW-ROLE` (kebutuhan, bukti, tugas, batas wewenang, alasan peran lama
-  tidak cukup). Rekomendasi skill/MCP/tool wajib menyertakan sumber, izin yang diminta, dan risikonya.
+- Peran **tidak boleh membuat peran/skill/MCP/tool baru secara sepihak**. Boleh mengusulkan lewat
+  handoff `...-to-NEW-ROLE`. Khusus `role-asisten`, diizinkan membuatkan file `SKILL.md` peran baru
+  HANYA jika user memilih opsi untuk dibuatkan langsung saat dipandu. Rekomendasi skill/MCP/tool wajib
+  menyertakan sumber, izin yang diminta, dan risikonya.
 
 ## Kualitas kode (untuk peran yang menulis kode)
 - **Cari dulu, baru tulis**: grep/cari yang sudah ada; tulis hasilnya ("dipakai ulang X" atau

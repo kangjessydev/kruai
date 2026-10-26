@@ -19,8 +19,16 @@ Rancangan kasar dan **kontrak** (skema API/DB) di `docs/contract/` sebagai sumbe
 kebenaran FE/BE/inspektur.
 
 ## role-frontend / role-backend / role-database
-Pembangun. Aturan kualitas kode di protocol berlaku penuh. Frontend sudah mencakup UI
-(pisahkan hanya jika terbukti perlu). Wajib memperbarui kontrak dan peta saat mengubah.
+Pembangun. Aturan kualitas kode di protocol berlaku penuh.
+- **role-frontend**: mencakup UI dan styling. Wajib memiliki checklist *micro-interactions* (transisi halus 150-300ms, hover/focus feedback, skeleton loading, dialog open/close transition, anti-kaku). Wajib mendukung `prefers-reduced-motion`.
+- Wajib memperbarui kontrak dan peta saat mengubah struktur.
+
+## role-motion (konsultan/auditor animasi)
+Hanya membaca dan membuat rekomendasi spesifikasi gerak (handoff ke `role-frontend`).
+- Menentukan arsitektur motion: kapan cukup CSS/Tailwind transition, kapan butuh library (Framer Motion / Motion One / GSAP).
+- Menetapkan skala timing dan easing curves (misal: standard cubic-bezier, spring physics) agar UI konsisten dan tidak berlebihan (mencegah AI slop animasi).
+- Memastikan performa 60fps (hindari menganimasikan properti layout `width`/`height`/`top`, prioritaskan `transform` dan `opacity`).
+- Memastikan kepatuhan aksesibilitas (`prefers-reduced-motion`).
 
 ## role-inspektur
 Hanya membaca. Menelusuri data tampilan FE sampai endpoint dan tabel DB. Tanda dummy:
