@@ -3,8 +3,15 @@
 Ketik `/role` di chat untuk melihat peran yang sudah ada. Mulai hampir selalu dari `/role-asisten`.
 - Spesifikasi detail peran yang direncanakan: [planned-roles.md](./planned-roles.md)
 - Arsitektur & alasan keberadaan peran (Developer Reference): [docs/role-architecture.md](./docs/role-architecture.md)
+- Catatan Diskusi & Keputusan (ADR / Memory): [docs/discussion-records.md](./docs/discussion-records.md)
+- Kerangka Kerja Anti-AI Slop UI (Vercel Guidelines): [references/anti-ai-slop-ui.md](./references/anti-ai-slop-ui.md)
+- Praktik Terbaik Backend & Database (Layered & Postgres): [references/backend-architecture-best-practices.md](./references/backend-architecture-best-practices.md)
 - Katalog acuan jenis website: [references/website-archetypes.md](./references/website-archetypes.md)
+- Katalog gaya desain: [references/design-styles.md](./references/design-styles.md)
+- Katalog jenis aset visual: [references/asset-types.md](./references/asset-types.md)
+- Katalog gaya tipografi: [references/typography-styles.md](./references/typography-styles.md)
 - Panduan standar animasi/motion: [references/motion-guidelines.md](./references/motion-guidelines.md)
+- Matriks spesifikasi fitur & Production DoD: [references/feature-matrix.md](./references/feature-matrix.md)
 
 Status: ✅ ada · 📝 direncanakan
 
@@ -30,3 +37,12 @@ Status: ✅ ada · 📝 direncanakan
 | `/role-marketer` | 📝 | Strategi pemasaran | Tidak |
 
 Peran baru diusulkan lewat handoff `...-to-NEW-ROLE`, lalu ditambahkan ke sini setelah disetujui user.
+
+---
+
+## Custom Project Tools (Bawaan Proyek Eksisting)
+Jika proyek lanjutan ini memiliki skill/tools lokal bawaan (tidak berawalan `role-`), daftarkan di sini agar diakui dan dapat dipanggil oleh tim peran tanpa tertimpa atau campur aduk:
+
+| Shortcut / Skill Name | Fungsi | Sumber File / Path |
+|---|---|---|
+| *(Belum ada tool lokal yang diadopsi)* | - | - |

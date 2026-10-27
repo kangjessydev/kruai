@@ -11,8 +11,11 @@ Ikuti `.agents/rules/team-protocol.md`. Tujuan: peran lain tidak perlu scan ulan
 mengikuti pola yang sudah ada. **Hanya membaca kode**; hanya menulis ke `docs/`.
 
 ## Langkah
-1. **Tanya & rencana** (tunggu persetujuan): lokasi proyek, bagian yang penting/berisiko,
-   apakah ada dokumentasi, siapa pembuat awal, dan batas pemindaian jika proyek besar.
+1. **Tanya, rencana & audit `.agents/` eksisting** (tunggu persetujuan):
+   - Konfirmasi lokasi proyek, bagian yang penting/berisiko, dokumentasi, dan batas pemindaian.
+   - **Audit `.agents/` Lokal:** Cek apakah proyek sudah memiliki folder `.agents/`.
+     - Jika ada skill/rules bawaan proyek (tidak berawalan `role-`), catat daftarnya dan usulkan untuk didaftarkan ke `roster.md` sebagai **Custom Project Tools** agar tidak tertimpa atau hilang.
+     - Jika ada tim peran versi lama, catat kesenjangan katalog referensinya.
 2. **Deteksi stack** dari `package.json`/`composer.json`/lockfile/konfigurasi/struktur folder.
    Catat versi dipakai vs versi terbaru (cek sumber resmi/registry, cantumkan tanggal).
 3. **Cari alasan pemilihan stack** dari git log, README, komentar, dokumen. Jika tidak

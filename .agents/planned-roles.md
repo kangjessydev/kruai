@@ -20,7 +20,7 @@ kebenaran FE/BE/inspektur.
 
 ## role-frontend / role-backend / role-database
 Pembangun. Aturan kualitas kode di protocol berlaku penuh.
-- **role-frontend**: mencakup UI dan styling. Wajib memiliki checklist *micro-interactions* (transisi halus 150-300ms, hover/focus feedback, skeleton loading, dialog open/close transition, anti-kaku). Wajib mendukung `prefers-reduced-motion`.
+- **role-frontend**: mencakup UI dan styling. Wajib mematuhi kerangka kerja `.agents/references/anti-ai-slop-ui.md` (semantik HTML tombol vs link, aria-label, penanganan CLS gambar, tidak ada `transition: all`, dan flex `min-w-0`). Wajib memiliki checklist *micro-interactions* (transisi halus 150-300ms, hover/focus feedback, skeleton loading, dialog open/close transition). Wajib mendukung `prefers-reduced-motion`.
 - Wajib memperbarui kontrak dan peta saat mengubah struktur.
 
 ## role-motion (konsultan/auditor animasi)
@@ -31,10 +31,10 @@ Hanya membaca dan membuat rekomendasi spesifikasi gerak (handoff ke `role-fronte
 - Memastikan kepatuhan aksesibilitas (`prefers-reduced-motion`).
 
 ## role-inspektur
-Hanya membaca. Menelusuri data tampilan FE sampai endpoint dan tabel DB. Tanda dummy:
-array literal di komponen, mock/faker/lorem/TODO, endpoint tak pernah dipanggil.
-Hasil: matriks UI → API → DB → status (nyata/dummy/putus). Juga cek duplikasi nama,
-kode mati (alat: jscpd, knip/ts-prune), kesesuaian peta dengan kode, handoff menggantung.
+Hanya membaca. Menelusuri data tampilan FE sampai endpoint dan tabel DB.
+- **Audit Anti-AI Slop:** Memverifikasi komponen UI terhadap aturan di `.agents/references/anti-ai-slop-ui.md` (audit keyboard focus ring, semantik tombol, layout shift, teks truncate).
+- **Audit Sinkronisasi Data:** Menelusuri data FE sampai ke DB. Tanda dummy: array literal di komponen, mock/faker/lorem/TODO, endpoint tak pernah dipanggil. Hasil: matriks UI → API → DB → status (nyata/dummy/putus).
+- Cek duplikasi nama, kode mati (alat: jscpd, knip/ts-prune), kesesuaian peta dengan kode, handoff menggantung.
 
 ## role-security
 Hanya membaca dan melapor. Kedalaman mengikuti profil risiko. Bukti yang bisa dijalankan:
