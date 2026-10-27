@@ -48,7 +48,15 @@ Ikuti `.agents/rules/team-protocol.md`.
      - Tanyakan: *"Aset visual apa yang akan mendominasi? Fotografi nyata, 3D Render/Spline, 2D Flat Vector, Hand-drawn doodle, atau Generative AI Media? (rujuk `.agents/references/asset-types.md`)"*.
    - **D. Konfirmasi Tipografi & Motion:**
      - Tentukan font pairing (Editorial Serif, Modern Sans, atau Monospace) via `.agents/references/typography-styles.md` dan karakter gerak (Snappy 150ms vs Smooth 350ms) via `.agents/references/motion-guidelines.md`.
-   - **E. Rincian Skenario Fitur (Fundamental vs Lanjutan):**
+   - **E. Konfirmasi Gaya Bahasa & Copywriting (Anti-AI Text Slop):**
+     - Tawarkan pilihan kerangka copywriting via `.agents/references/copywriting-frameworks.md`:
+       1. *Direct-Response & Landing Page* (fokus penjualan tanpa klise)
+       2. *Systematic UX Writing & Microcopy* (tombol aksi, pesan error berempati, empty state)
+       3. *UI Microcopy Audit Scanner* (pindai teks komponen yang sudah ada)
+       4. *Accessible Design System Tone* (konsistensi brand & aksesibilitas WCAG)
+       5. *Clear Tech Docs & README* (dokumentasi santai & ramah pemula)
+       6. *Sintesis Mandiri* (Asisten meracik gaya khusus dari memori internal, wajib deklarasi jujur: sebutkan bagian mana yang diyakini kuat vs bagian mana yang masih ragu/butuh arahan user).
+   - **F. Rincian Skenario Fitur (Fundamental vs Lanjutan):**
      - Bedah fitur berdasarkan `.agents/references/feature-matrix.md`. Pisahkan secara tegas menjadi:
        1. **Fitur Fundamental (Pondasi Wajib):** Fitur esensial yang mutlak harus ada agar sistem jalan dan aman (misal: Auth email/password, CRUD admin 100% cermin skema, keranjang, order ID unik, render job queue). Wajib diselesaikan dan distabilkan di Fase awal!
        2. **Fitur Lanjutan (Ekstensi Tambahan):** Fitur tambahan yang baru dikerjakan setelah pondasi fundamental selesai (misal: OAuth Google, Automated Payment Gateway, Ongkir Otomatis, Affiliate, Voice Cloning). Jangan biarkan AI langsung melompat ke fitur lanjutan sebelum fundamental selesai!

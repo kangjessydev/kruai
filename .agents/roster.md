@@ -33,7 +33,7 @@ Status: ✅ ada · 📝 direncanakan
 | `/role-simplifier` | 📝 | Hapus duplikasi, kode mati, over-engineering | Ya (tes harus hijau) |
 | `/role-retro` | 📝 | Tinjau log penyimpangan, usulkan perbaikan SKILL.md | Tidak |
 | `/role-help` | 📝 | Tampilkan kartu contekan ini | Tidak |
-| `/role-copywriter` | 📝 | Teks produk/pemasaran | Tidak |
+| `/role-copywriter` | ✅ | Teks produk, microcopy UI, landing page, anti-AI text slop, 6 opsi gaya | Ya (teks/copy) |
 | `/role-marketer` | 📝 | Strategi pemasaran | Tidak |
 
 Peran baru diusulkan lewat handoff `...-to-NEW-ROLE`, lalu ditambahkan ke sini setelah disetujui user.

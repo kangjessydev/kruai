@@ -17,19 +17,22 @@ Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1
   - `.agents/skills/role-backend/SKILL.md`: Pembangun logika bisnis 4-lapis (Controller, Service, Repository, Schema), Vertical Slice, mitigasi *race condition & idempotency*, pencegahan N+1 query, dan *live registry ping*.
   - `.agents/skills/role-frontend/SKILL.md`: Pembangun antarmuka anti-slop, aturan *Schema Mirroring* (form admin 100% cermin DB), mikro-interaksi 120–250ms, aksesibilitas keyboard, dan angka `tabular-nums`.
   - `.agents/skills/role-inspektur/SKILL.md`: Auditor mutu murni (*read-only*): melacak aliran data UI ➔ API ➔ DB, deteksi data dummy/mocking tersembunyi, dan audit kepatuhan anti-slop.
+  - `.agents/skills/role-copywriter/SKILL.md`: Penulis teks produk, microcopy antarmuka, headline penjualan, dan pembasmi klise AI (*AI text slop*) dengan 6 opsi kerangka acuan.
+- **Standar & Kerangka Copywriting Antarmuka:**
+  - `.agents/references/copywriting-frameworks.md`: Standar penulisan manusiawi merujuk terbuka pada 5 kerangka komunitas (`marketingskills`, `ux-writing-skill`, `ux-microcopy-audit`, `design-system-tone`, `tech-docs`) serta Opsi 6 Sintesis Mandiri berprotokol deklarasi kejujuran (*confidence & blindspot declaration*).
 
 - **Paket NPM CLI Scaffolder (`kruai`):**
   - `package.json`: Konfigurasi paket npm publik untuk executable CLI `kruai`.
   - `bin/kruai.js`: Skrip CLI *zero-dependency* Node.js untuk mengeksekusi `npx kruai init` (scaffolding otomatis `.agents/` dan template `docs/` ke proyek tujuan) dan `npx kruai doctor` (pemeriksaan kelengkapan sistem tim peran).
 
 ### Diubah (Changed)
-- **`README.md`:** Menambahkan panduan instalasi cepat `npx kruai init` dan `npx kruai doctor`, memperbarui tabel roster peran aktif, dan menandai Fase 2 roadmap selesai.
-- **`.agents/roster.md`:** Memperbarui status `role-frontend`, `role-backend`, `role-database`, dan `role-inspektur` dari 📝 (direncanakan) menjadi ✅ (aktif).
+- **`README.md`:** Menambahkan panduan instalasi langsung tanpa clone (`npx github:kangjessydev/kruai init`), seksi cara berkontribusi via GitHub Issues, dan mengaktifkan `role-copywriter` di roster.
+- **`.agents/skills/role-asisten/SKILL.md`:** Menambahkan alur konfirmasi gaya bahasa dan copywriting (6 opsi) saat menggali kebutuhan proyek.
+- **`.agents/roster.md`:** Memperbarui status `role-frontend`, `role-backend`, `role-database`, `role-inspektur`, dan `role-copywriter` menjadi ✅ (aktif).
 - **`.agents/rules/team-protocol.md`:** Menambahkan pasal *Disiplin Jejak Perubahan & Anti-Regresi (CHANGELOG Discipline)* untuk mewajibkan pencatatan perubahan dan mencegah amnesia AI.
 
 ### Rencana Selanjutnya
-- Publikasi paket `kruai` ke NPM Registry (`npm publish`).
-- Eksplorasi Fase 3: Server Model Context Protocol (MCP) untuk memori terpusat.
+- Uji coba nyata alur end-to-end KruAI di proyek riil.
 
 ---
 

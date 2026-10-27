@@ -200,12 +200,14 @@ function handleDoctor() {
     { name: 'Panduan Anti-AI Slop UI', path: path.join(agentsDir, 'references', 'anti-ai-slop-ui.md') },
     { name: 'Arsitektur Backend & Database', path: path.join(agentsDir, 'references', 'backend-architecture-best-practices.md') },
     { name: 'Matriks Fitur (Feature Matrix)', path: path.join(agentsDir, 'references', 'feature-matrix.md') },
+    { name: 'Kerangka Copywriting (copywriting-frameworks.md)', path: path.join(agentsDir, 'references', 'copywriting-frameworks.md') },
     { name: 'Role: role-asisten', path: path.join(agentsDir, 'skills', 'role-asisten', 'SKILL.md') },
     { name: 'Role: role-onboard', path: path.join(agentsDir, 'skills', 'role-onboard', 'SKILL.md') },
     { name: 'Role: role-database', path: path.join(agentsDir, 'skills', 'role-database', 'SKILL.md') },
     { name: 'Role: role-backend', path: path.join(agentsDir, 'skills', 'role-backend', 'SKILL.md') },
     { name: 'Role: role-frontend', path: path.join(agentsDir, 'skills', 'role-frontend', 'SKILL.md') },
     { name: 'Role: role-inspektur', path: path.join(agentsDir, 'skills', 'role-inspektur', 'SKILL.md') },
+    { name: 'Role: role-copywriter', path: path.join(agentsDir, 'skills', 'role-copywriter', 'SKILL.md') },
   ];
 
   let healthy = 0;
