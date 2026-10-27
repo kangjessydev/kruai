@@ -80,6 +80,12 @@ Jika ragu, ambil tingkat lebih tinggi dan tanyakan user. Jangan menurunkan sendi
   - Tugas murni membaca, menganalisis, dan mengeluarkan laporan temuan berbobot (*High Signal-to-Noise*) berbasis bukti konkret (`file:baris`).
   - Rekomendasi perbaikan disalurkan lewat tiket handoff ke peran pembangun terkait.
 
+## Disiplin Jejak Perubahan & Anti-Regresi (CHANGELOG Discipline)
+- Setiap penambahan fitur/arsitektur, perubahan konfigurasi/kontrak, atau **penghapusan berkas/fitur/konsep**, peran **WAJIB memperbarui `CHANGELOG.md`** di bagian `[Unreleased]`.
+- **Aturan Jejak Penghapusan (Removal Rationale):** Jika menghapus atau meniadakan sesuatu (seperti file/fungsi/fitur), peran WAJIB mencatat nama item dan **alasan rasionalnya** di sub-bagian `Dihapus & Alasan`.
+- **Pencegahan Amnesia/Regresi AI:** Sebelum mengusulkan atau merancang fitur baru, peran wajib memeriksa riwayat di `CHANGELOG.md`. Dilarang keras menambahkan kembali hal-hal yang sudah sengaja dihapus di masa lalu tanpa persetujuan eksplisit user.
+
 ## Mode ringan
 Jika user menulis "ringan" pada pemanggilan, pertanyaan dan laporan diringkas
 (laporan cukup beberapa baris), tetapi bukti dan batas wewenang tetap berlaku.
+

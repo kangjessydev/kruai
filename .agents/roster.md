@@ -22,11 +22,11 @@ Status: ✅ ada · 📝 direncanakan
 | `/role-init` | 📝 | Proyek baru: kebutuhan, brief, kontrak awal, SOP, glossary | Tidak |
 | `/role-research` | 📝 | Riset (termasuk rekomendasi stack berbasis bukti terkini) | Tidak |
 | `/role-blueprint` | 📝 | Rancangan kasar dan kontrak API/DB | Tidak |
-| `/role-frontend` | 📝 | UI dan frontend (termasuk micro-interactions dasar) | Ya |
+| `/role-frontend` | ✅ | UI dan frontend (anti-slop, schema mirroring, micro-interactions) | Ya |
 | `/role-motion` | 📝 | Konsultan & auditor animasi/motion UI (timing, easing, performa, anti-AI slop) | Tidak |
-| `/role-backend` | 📝 | Backend/API | Ya |
-| `/role-database` | 📝 | Skema dan data | Ya |
-| `/role-inspektur` | 📝 | Cek ketidaksinkronan UI-API-DB-kontrak, data dummy | Tidak |
+| `/role-backend` | ✅ | Backend/API (arsitektur 4 lapis, validasi ketat, anti-race condition) | Ya |
+| `/role-database` | ✅ | Skema, migrasi aman, relasi, indexing, RLS, zero data loss | Ya |
+| `/role-inspektur` | ✅ | Cek ketidaksinkronan UI-API-DB-kontrak, audit data dummy, audit anti-slop | Tidak |
 | `/role-security` | 📝 | Cek keamanan sesuai profil risiko | Tidak |
 | `/role-bug-hunter` | 📝 | Cari bug dengan bukti | Tidak |
 | `/role-devops` | 📝 | Tes, build, rilis, optimasi sebelum production | Terbatas (config/CI) |

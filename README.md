@@ -19,6 +19,26 @@ Ketika membangun aplikasi menggunakan AI, masalah klasik yang sering terjadi:
 
 ---
 
+## ⚡ Instalasi Cepat (Untuk Vibe Coder)
+
+Pasang seluruh tim peran dan standar rekayasa KruAI ke dalam proyek Anda hanya dengan **satu baris perintah**:
+
+```bash
+npx kruai init
+```
+
+Atau jika ingin memeriksa kelengkapan instalasi KruAI di proyek Anda kapan saja:
+```bash
+npx kruai doctor
+```
+
+Setelah terpasang, buka proyek di **Google Antigravity IDE** atau **Cursor**, lalu panggil di chat:
+```text
+/role-asisten
+```
+
+---
+
 ## 🧭 Cara Kerja KruAI
 
 ```
@@ -63,14 +83,14 @@ Ketik `/role` di antarmuka chat AI Anda untuk memanggil kru:
 |---|---|---|---|
 | `/role-asisten` | ✅ **Aktif** | Pintu masuk utama: wawancara kebutuhan, mitigasi blindspot teknis, pandu pembuatan peran baru. | ❌ Hanya Baca |
 | `/role-onboard` | ✅ **Aktif** | Memahami proyek lanjutan: ekstrak stack, petakan fitur, bangun glossary, rekonsiliasi `.agents/`. | ❌ Hanya Baca |
+| `/role-database` | ✅ **Aktif** | Perancang skema DB, indexing B-Tree/Composite, migrasi idempoten, dan zero data loss. | ✍️ **Ubah Kode** |
+| `/role-backend`  | ✅ **Aktif** | Pembangun API 4-lapis (Routes → Controllers → Services → Repositories), validasi ketat, anti-race condition. | ✍️ **Ubah Kode** |
+| `/role-frontend` | ✅ **Aktif** | Pembangun UI patuh doktrin visual, anti-AI slop, schema mirroring (form lengkap), dan micro-interactions. | ✍️ **Ubah Kode** |
+| `/role-inspektur`| ✅ **Aktif** | **Auditor Kunci:** Menelusuri rantai UI → API → DB untuk mendeteksi data dummy & audit anti-slop. | ❌ Hanya Baca |
 | `/role-init` | 📝 Rencana | Inisialisasi proyek baru: buat struktur awal, SOP bernomor, dan kontrak awal. | ❌ Hanya Baca |
 | `/role-blueprint`| 📝 Rencana | Arsitek kontrak: satu-satunya sumber kebenaran skema API & DB sebelum koding dimulai. | ❌ Hanya Baca |
-| `/role-frontend` | 📝 Rencana | Pembangun UI patuh doktrin visual, anti-AI slop, dan micro-interactions fungsional. | ✍️ **Ubah Kode** |
-| `/role-backend`  | 📝 Rencana | Pembangun API 4-lapis (Routes → Controllers → Services → Repositories). | ✍️ **Ubah Kode** |
-| `/role-database` | 📝 Rencana | Perancang skema DB, indexing B-Tree/Composite, dan migrasi idempoten. | ✍️ **Ubah Kode** |
-| `/role-inspektur`| 📝 Rencana | **Auditor Kunci:** Menelusuri rantai UI → API → DB untuk mendeteksi data dummy & audit anti-slop. | ❌ Hanya Baca |
-| `/role-security` | 📝 Rencana | Penguji celah keamanan OWASP Top 10, validasi IDOR, dan audit kebocoran kredensial. | ❌ Hanya Baca |
 | `/role-motion`   | 📝 Rencana | Konsultan animasi: timing baku 150-300ms, kurva cubic-bezier, dan aksesibilitas reduced-motion. | ❌ Hanya Baca |
+| `/role-security` | 📝 Rencana | Penguji celah keamanan OWASP Top 10, validasi IDOR, dan audit kebocoran kredensial. | ❌ Hanya Baca |
 | `/role-devops`   | 📝 Rencana | Pengawal build, unit testing, CI/CD, dan audit ukuran bundle. | ⚠️ Terbatas Config |
 
 ---
@@ -97,7 +117,7 @@ KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak
 ## 🗺️ Roadmap Distribusi
 
 - [x] **Fase 1: Core Agent Roles & Protocol** (Selesai — Struktur `.agents/` lokal teruji).
-- [ ] **Fase 2: NPM CLI Scaffolder (`npx kruai init`)** (Mempermudah vibe coder memasang KruAI di proyek baru dengan 1 baris perintah).
+- [x] **Fase 2: NPM CLI Scaffolder (`npx kruai init`)** (Selesai — Tool CLI `bin/kruai.js` zero-dependency, siap publish ke npm).
 - [ ] **Fase 3: KruAI MCP Server** (Menyediakan server Model Context Protocol terpusat di GitHub dengan shared learning database).
 
 ---

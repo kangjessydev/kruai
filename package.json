@@ -1,0 +1,42 @@
+{
+  "name": "kruai",
+  "version": "0.1.0",
+  "description": "The Production-Grade Engineering Crew for Vibe Coders",
+  "main": "bin/kruai.js",
+  "bin": {
+    "kruai": "./bin/kruai.js"
+  },
+  "type": "module",
+  "files": [
+    "bin",
+    ".agents",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node bin/kruai.js --help"
+  },
+  "keywords": [
+    "kruai",
+    "vibe-coding",
+    "agentic-ai",
+    "antigravity",
+    "cursor",
+    "copilot",
+    "anti-ai-slop",
+    "software-engineering"
+  ],
+  "author": "kangjessydev",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kangjessydev/kruai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kangjessydev/kruai/issues"
+  },
+  "homepage": "https://github.com/kangjessydev/kruai#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
