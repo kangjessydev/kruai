@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -16,6 +17,10 @@ function runCli(args, cwd = REPO_ROOT) {
     cwd,
     encoding: 'utf8',
   });
+}
+
+function stripAnsi(str) {
+  return str.replace(/\x1b\[[0-9;]*m/g, '');
 }
 
 function makeTempDir(prefix = 'kruai-test-') {
@@ -295,4 +300,121 @@ test('Anti-regression checks across .agents/ and README.md', () => {
     'utf8'
   );
   assert.equal(/vitest|package\.json/i.test(backendSkill), false);
+});
+
+test('Smart Update: .kruai-meta.json, --dry-run, local conflict guard, auto-update, --force & legacy', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'package.json'), 'utf8'));
+  const tmpDir = makeTempDir('kruai-smart-');
+  try {
+    // 1. init --dry-run creates nothing on disk
+    const dryInit = runCli(['init', tmpDir, '--dry-run']);
+    assert.equal(dryInit.status, 0, dryInit.stderr);
+    assert.match(dryInit.stdout, /MODE DRY-RUN/);
+    assert.match(dryInit.stdout, /BARU \(/);
+    assert.equal(fs.existsSync(path.join(tmpDir, '.agents')), false);
+    assert.equal(fs.existsSync(path.join(tmpDir, 'docs')), false);
+
+    // 2. Real init creates valid .kruai-meta.json with SHA-256 hashes
+    const initRes = runCli(['init', tmpDir]);
+    assert.equal(initRes.status, 0, initRes.stderr);
+
+    const metaPath = path.join(tmpDir, '.agents', '.kruai-meta.json');
+    assert.equal(fs.existsSync(metaPath), true);
+    const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    assert.equal(meta.version, pkg.version);
+    assert.match(meta.files['skills/role-devops/SKILL.md'], /^[a-f0-9]{64}$/);
+
+    // 3. Simulate older unmodified file (hash matches old content) + local custom modification
+    const teamProtoPath = path.join(tmpDir, '.agents', 'rules', 'team-protocol.md');
+    const oldProtoText = '# Old KruAI protocol v0.1.0\n';
+    fs.writeFileSync(teamProtoPath, oldProtoText, 'utf8');
+    meta.version = '0.1.0';
+    meta.files['rules/team-protocol.md'] = crypto
+      .createHash('sha256')
+      .update(oldProtoText)
+      .digest('hex');
+    fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2), 'utf8');
+
+    const devopsPath = path.join(tmpDir, '.agents', 'skills', 'role-devops', 'SKILL.md');
+    const localCustomDevops = '# Custom CloudPanel DevOps override\n';
+    fs.writeFileSync(devopsPath, localCustomDevops, 'utf8');
+
+    const newHelperPath = path.join(tmpDir, '.agents', 'references', 'anti-ai-slop-ui.md');
+    fs.rmSync(newHelperPath);
+
+    // 4. update --dry-run reports BARU / UPDATE / KONFLIK LOKAL / SAMA without modifying disk
+    const metaBeforeDry = fs.readFileSync(metaPath, 'utf8');
+    const dryUpdate = runCli(['update', tmpDir, '--dry-run']);
+    assert.equal(dryUpdate.status, 0, dryUpdate.stderr);
+    const dryOut = stripAnsi(dryUpdate.stdout);
+    assert.match(dryOut, /MODE DRY-RUN/);
+    assert.match(dryOut, /Versi terpasang: v0\.1\.0/);
+    assert.match(dryOut, /BARU \(1\):[\s\S]*references\/anti-ai-slop-ui\.md/);
+    assert.match(dryOut, /UPDATE \(1\):[\s\S]*rules\/team-protocol\.md/);
+    assert.match(dryOut, /KONFLIK LOKAL \(1\):[\s\S]*skills\/role-devops\/SKILL\.md/);
+    assert.equal(fs.readFileSync(teamProtoPath, 'utf8'), oldProtoText);
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), localCustomDevops);
+    assert.equal(fs.existsSync(newHelperPath), false);
+    assert.equal(fs.readFileSync(metaPath, 'utf8'), metaBeforeDry);
+
+    // 5. Normal update auto-updates unmodified file, restores missing file, preserves local conflict
+    const safeUpdate = runCli(['update', tmpDir]);
+    assert.equal(safeUpdate.status, 0, safeUpdate.stderr);
+    assert.match(safeUpdate.stdout, /KONFLIK LOKAL terdeteksi/);
+    assert.match(safeUpdate.stdout, /\/role-asisten update/);
+    assert.equal(fs.existsSync(newHelperPath), true);
+    assert.equal(
+      fs.readFileSync(teamProtoPath, 'utf8'),
+      fs.readFileSync(path.join(REPO_ROOT, '.agents', 'rules', 'team-protocol.md'), 'utf8')
+    );
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), localCustomDevops);
+
+    // 6. update --force overwrites conflicted local file and updates hash in .kruai-meta.json
+    const forceUpdate = runCli(['update', tmpDir, '--force']);
+    assert.equal(forceUpdate.status, 0, forceUpdate.stderr);
+    const starterDevops = fs.readFileSync(
+      path.join(REPO_ROOT, '.agents', 'skills', 'role-devops', 'SKILL.md'),
+      'utf8'
+    );
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), starterDevops);
+    const updatedMeta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+    assert.equal(
+      updatedMeta.files['skills/role-devops/SKILL.md'],
+      crypto.createHash('sha256').update(starterDevops).digest('hex')
+    );
+
+    // 7. Legacy project without .kruai-meta.json protects differing skill file until --force
+    fs.rmSync(metaPath);
+    fs.writeFileSync(devopsPath, localCustomDevops, 'utf8');
+
+    const legacyDry = runCli(['update', tmpDir, '--dry-run']);
+    assert.equal(legacyDry.status, 0);
+    assert.match(legacyDry.stdout, /tanpa metadata versi sebelumnya/);
+
+    const legacyUpdate = runCli(['update', tmpDir]);
+    assert.equal(legacyUpdate.status, 0);
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), localCustomDevops);
+
+    // Second legacy update still protects the unresolved file instead of overwriting it
+    const legacyUpdate2 = runCli(['update', tmpDir]);
+    assert.equal(legacyUpdate2.status, 0);
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), localCustomDevops);
+
+    const legacyForce = runCli(['update', tmpDir, '--force']);
+    assert.equal(legacyForce.status, 0);
+    assert.equal(fs.readFileSync(devopsPath, 'utf8'), starterDevops);
+    assert.equal(fs.existsSync(metaPath), true);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('role-asisten skill documents /role-asisten update reconciliation workflow', () => {
+  const asistenSkill = fs.readFileSync(
+    path.join(REPO_ROOT, '.agents', 'skills', 'role-asisten', 'SKILL.md'),
+    'utf8'
+  );
+  assert.match(asistenSkill, /\/role-asisten update/);
+  assert.match(asistenSkill, /--dry-run/);
+  assert.match(asistenSkill, /docs\/decisions\.md/);
 });

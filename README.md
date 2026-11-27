@@ -45,6 +45,15 @@ Setelah terpasang, buka proyek di **Google Antigravity IDE**, **Cursor**, atau *
 /role-asisten
 ```
 
+### 🔄 Memperbarui KruAI di Proyek yang Sedang Jalan (Smart Update)
+Saat KruAI merilis versi baru, proyek yang sudah berjalan dapat diperbarui secara aman tanpa merusak kustomisasi lokal maupun keputusan arsitektur (`docs/decisions.md`):
+```bash
+npx github:kangjessydev/kruai update --dry-run   # Pratinjau file BARU, UPDATE, dan KONFLIK LOKAL
+npx github:kangjessydev/kruai update             # Perbarui aman; file yang diubah lokal otomatis dipertahankan
+npx github:kangjessydev/kruai update --force     # Paksa timpa file konflik dengan versi starter terbaru
+```
+KruAI menyimpan sidik jari SHA-256 berkas bawaan di `.agents/.kruai-meta.json`. Untuk pembaruan yang sadar konteks penuh terhadap `docs/decisions.md`, `docs/conventions.md`, dan handoff `open`, panggil **`/role-asisten update`** di chat AI agar konflik diaudit dan dikonfirmasi terlebih dahulu.
+
 ---
 
 ## 🧭 Cara Kerja Setiap Peran (Visual Workflow)

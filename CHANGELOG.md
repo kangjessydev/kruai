@@ -13,6 +13,19 @@ Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1
 
 ---
 
+## [0.2.1] - 2026-11-27
+
+### Ditambahkan (Added)
+- **Smart Update (`--dry-run`, `--force`, `.agents/.kruai-meta.json`, & `/role-asisten update`):**
+  - `bin/kruai.js`: Pelacakan hash SHA-256 berkas bawaan di `.agents/.kruai-meta.json` untuk membedakan berkas standar vs berkas yang dimodifikasi lokal oleh proyek; mendukung `update --dry-run` (pratinjau tanpa menulis ke disk), proteksi otomatis `KONFLIK LOKAL` (termasuk proyek legacy tanpa metadata), dan `--force` untuk menimpa paksa.
+  - `.agents/skills/role-asisten/SKILL.md`: Menambahkan alur **`/role-asisten update`** untuk menjalankan *dry-run*, mengaudit bentrokan aturan baru terhadap `docs/decisions.md` (ADR), `docs/conventions.md`, dan handoff `open`, lalu meminta konfirmasi resolusi user sebelum rekonsiliasi.
+  - `tests/kruai.test.js`: Menambahkan suite uji otomatis untuk `.kruai-meta.json`, `--dry-run`, proteksi konflik lokal, `--force`, auto-update berkas tak termodifikasi, proyek legacy tanpa metadata, dan verifikasi alur `/role-asisten update`.
+
+### Diubah (Changed)
+- **`README.md`:** Menambahkan sub-seksi panduan **Smart Update** (`update --dry-run`, `update`, `--force`, `.kruai-meta.json`, dan `/role-asisten update`).
+
+---
+
 ## [0.2.0] - 2026-11-27
 
 ### Ditambahkan (Added)
@@ -113,6 +126,7 @@ Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1
 
 ---
 
-[Unreleased]: https://github.com/kangjessydev/kruai/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/kangjessydev/kruai/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/kangjessydev/kruai/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/kangjessydev/kruai/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/kangjessydev/kruai/releases/tag/v0.1.0

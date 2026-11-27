@@ -17,7 +17,7 @@ Ikuti `.agents/rules/team-protocol.md`.
   - Jika user menyetujui: peran dapat mengeksekusi secara berkelanjutan hingga kriteria selesai tercapai.
   - Jika user tidak menyetujui: peran wajib berhenti dan meminta persetujuan di setiap langkah.
 
-## Alur Kerja (Bisa dipanggil via `/role-asisten`, `/role-asisten start`, atau `/role-asisten web <jenis-website>`)
+## Alur Kerja (Bisa dipanggil via `/role-asisten`, `/role-asisten start`, `/role-asisten update`, atau `/role-asisten web <jenis-website>`)
 
 1. **Cek Konteks Proyek, Pilih Mode Kerja & Audit `.agents/` Eksisting:**
    - **A. Audit Kesehatan & Sidik Jari Folder `.agents/`:**
@@ -92,6 +92,26 @@ Ikuti `.agents/rules/team-protocol.md`.
    Hanya rekomendasi; user yang memutuskan dan mengaudit isinya.
 7. **Penutup.** Beri tahu user peran mana yang dipanggil berikutnya (mis. `/role-backend`),
    lalu tanya "ada lagi yang bisa dibantu?"; jika tidak ada jawaban, tulis rangkuman sesi.
+
+## Alur Update & Rekonsiliasi KruAI (`/role-asisten update`)
+Gunakan alur ini saat user ingin memperbarui KruAI di tengah proyek berjalan tanpa merusak kustomisasi atau melanggar keputusan proyek:
+1. **Deteksi Perubahan (*Dry-Run* Tanpa Menimpa):**
+   - Jalankan `npx github:kangjessydev/kruai update --dry-run` (atau periksa `.agents/.kruai-meta.json` dan `CHANGELOG.md` versi terbaru) untuk melihat daftar berkas **`BARU`**, **`UPDATE`**, dan **`⚠️ KONFLIK LOKAL`**.
+2. **Audit Kesesuaian Terhadap Konteks Proyek Berjalan:**
+   - Baca `docs/decisions.md` (ADR terkunci), `docs/conventions.md`, `docs/project-brief.md`, serta handoff berstatus `open` untuk mendeteksi:
+     - Berkas `.agents/` lokal yang pernah dimodifikasi khusus untuk proyek ini (`KONFLIK LOKAL`).
+     - Potensi pertentangan antara aturan/standar baru KruAI dengan ADR di `docs/decisions.md` (**ADR proyek selalu diprioritaskan**, kecuali user secara eksplisit setuju mengubahnya).
+     - Dampak perubahan protokol terhadap handoff `open` yang sedang berjalan.
+3. **Laporan Konflik & Konfirmasi Eksplisit User *(Wajib Sebelum Eksekusi)*:**
+   - Tampilkan ringkasan perubahan terbaru, daftar `KONFLIK LOKAL`, dan potensi pertentangan ADR, dengan 3 opsi resolusi per berkas berkonflik:
+     - **(a) Pertahankan versi lokal** (aman dari perubahan starter).
+     - **(b) Gabungkan fitur baru starter ke versi lokal** (ambil pembaruan penting sambil mempertahankan penyesuaian proyek).
+     - **(c) Ganti ke versi starter** (`--force` untuk berkas tersebut / salin dari starter terbaru).
+   - **Tunggu persetujuan eksplisit user** sebelum menjalankan update.
+4. **Eksekusi Update Terkendali & Verifikasi:**
+   - Jalankan `npx github:kangjessydev/kruai update` (berkas `KONFLIK LOKAL` otomatis dilewati/dipertahankan oleh CLI).
+   - Lakukan penggabungan terkendali hanya pada berkas konflik yang disetujui user dan selaraskan `docs/conventions.md` bila diperlukan tanpa melanggar `docs/decisions.md`.
+   - Verifikasi hasil akhir dengan `npx github:kangjessydev/kruai doctor`.
 
 ## Hindari
 - Terlalu cerewet: maksimal beberapa pertanyaan sekaligus.

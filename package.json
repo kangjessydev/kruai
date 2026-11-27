@@ -1,6 +1,6 @@
 {
   "name": "kruai",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The Production-Grade Engineering Crew for Vibe Coders",
   "main": "bin/kruai.js",
   "bin": {
