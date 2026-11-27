@@ -42,9 +42,9 @@ Dokumen ini menjadi acuan mutlak bagi `role-frontend` saat menulis antarmuka, da
 ## 4. Tipografi Presisi & Keterbacaan (Anti-Typographic Slop)
 - **Penanganan Kata Menggantung (Widow Prevention):**
   - Pada elemen heading (H1, H2, H3), gunakan class `text-wrap: balance` atau `text-pretty` agar baris terakhir tidak menyisakan satu kata sendirian yang canggung.
-- **Simbol Karakter Tipografi Baku:**
-  - Gunakan simbol elipsis resmi `…` (bukan tiga titik biasa `...`).
-  - Gunakan tanda petik kurva tipografi `“` dan `”` (bukan petik lurus ganda `"`).
+- **Simbol Karakter Tipografi Baku *(KHUSUS copy/teks UI yang dibaca pengguna — JANGAN diterapkan ke kode sumber, atribut HTML/JSX, JSON, SQL, atau string teknis)*:**
+  - Gunakan simbol elipsis resmi `…` (bukan tiga titik biasa `...`) pada teks antarmuka pengguna (misal: *"Memuat data…"*).
+  - Gunakan tanda petik kurva tipografi `“` dan `”` (bukan petik lurus ganda `"`) pada kutipan teks editorial/copy antarmuka.
 - **Tabular Numbers:**
   - Angka harga, stok, waktu countdown, dan data tabel **WAJIB** memiliki class `font-variant-numeric: tabular-nums` agar tidak bergoyang saat nilainya berganti.
 - **Pencegahan Teks Meluap (Overflow):**

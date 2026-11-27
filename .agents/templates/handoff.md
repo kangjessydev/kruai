@@ -1,8 +1,10 @@
-# Handoff NNN: <dari> → <untuk>
+<!-- Format nama file: YYYY-MM-DD-<dari>-to-<untuk>-<topik>.md -->
+# Handoff: <dari> → <untuk> (<topik>)
 
 - **Dari:** role-xxx   **Untuk:** role-yyy (atau NEW-ROLE)
 - **Tanggal:**
 - **Status:** open  <!-- open → accepted → done | rejected -->
+- **Diselesaikan di:** *(tautan laporan / commit saat status berubah menjadi done)*
 - **Prioritas:** rendah / sedang / tinggi
 
 ## Masalah / kebutuhan

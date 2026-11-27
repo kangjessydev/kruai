@@ -27,12 +27,20 @@ Pasang seluruh tim peran dan standar rekayasa KruAI ke dalam proyek Anda **tanpa
 npx github:kangjessydev/kruai init
 ```
 
+Opsi tambahan saat instalasi atau pembaruan:
+```bash
+npx github:kangjessydev/kruai init --ide cursor         # Tambah AGENTS.md & .cursor/rules/
+npx github:kangjessydev/kruai init --ide copilot        # Tambah AGENTS.md & .github/copilot-instructions.md
+npx github:kangjessydev/kruai init --ide all --with-hooks  # Semua bridge IDE + starter .agents/hooks.json
+npx github:kangjessydev/kruai update                    # Perbarui sistem KruAI tanpa menimpa kustomisasi user
+```
+
 Atau jika ingin memeriksa kelengkapan instalasi KruAI di proyek Anda kapan saja:
 ```bash
 npx github:kangjessydev/kruai doctor
 ```
 
-Setelah terpasang, buka proyek di **Google Antigravity IDE** atau **Cursor**, lalu panggil di chat:
+Setelah terpasang, buka proyek di **Google Antigravity IDE**, **Cursor**, atau **GitHub Copilot**, lalu panggil di chat:
 ```text
 /role-asisten
 ```
@@ -47,10 +55,10 @@ KruAI bekerja layaknya sebuah studio rekayasa perangkat lunak profesional dengan
   ┌────────────────────────────────────────────────────────────────────────┐
   │                           FASE 1: PERENCANAAN                          │
   │                                                                        │
-  │    [ 🚪 /role-asisten ] ──► Wawancara multi-dimensi (Desain/Copy/Fitur)│
-  │            │               Pilah Fitur: Fundamental vs Lanjutan        │
-  │            ▼               Sintesis: docs/conventions.md (Golden Code) │
-  │    [ 📐 /role-blueprint ] ─► Kunci Kontrak Skema di docs/contract/     │
+  │    [ 🚪 /role-asisten ] ──► Pilih Mode: Greenfield / Brownfield / Hotfix│
+  │            │               (Proyek Baru: Desain, Fitur, conventions.md)│
+  │            ▼               (Proyek Lanjutan: langsung ke target / audit)│
+  │    [ 📐 /role-blueprint ] ─► Aktif: Kunci Kontrak Skema di docs/contract/│
   └───────────────────────────────────┬────────────────────────────────────┘
                                       │
                                       ▼
@@ -63,8 +71,8 @@ KruAI bekerja layaknya sebuah studio rekayasa perangkat lunak profesional dengan
   │            │                                                           │
   │            ▼ (Handoff via docs/handoff/)                               │
   │  [ ⚙️ /role-backend ]                                                  │
-  │  Arsitektur 4-Lapis (Route ➔ Controller ➔ Service ➔ Repository).       │
-  │  Validasi ketat Zod, proteksi race condition, & live registry ping.    │
+  │  Stack-agnostic: arsitektur adaptif sesuai docs/conventions.md.        │
+  │  Validasi zero-trust, row locking, webhook guard & live registry ping. │
   │            │                                                           │
   │            ▼ (Handoff via docs/handoff/)                               │
   │  ┌───────────────────────────────────┬───────────────────────────────┐ │
@@ -80,8 +88,8 @@ KruAI bekerja layaknya sebuah studio rekayasa perangkat lunak profesional dengan
   │                     FASE 3: PENJAMINAN MUTU (QA AUDIT)                 │
   │                                                                        │
   │    [ 🔍 /role-inspektur ] (Audit Murni - Dilarang Ubah Kode)           │
-  │    1. Audit Rantai Data: UI ──► API ──► DB (Deteksi Dummy / Mock)      │
-  │    2. Audit Anti-Slop: Cek tombol keyboard, zero CLS, tabular-nums.    │
+  │    1. Multi-Pass Skeptical Audit (Concurrency, Webhook, IDOR, Console) │
+  │    2. Audit UI ──► API ──► DB, Anti-Slop, & Mode Reproduksi Bug.       │
   │    3. Keluarkan Laporan Temuan (file:baris) & Tiket Perbaikan Handoff. │
   └───────────────────────────────────┬────────────────────────────────────┘
                                       │
@@ -89,7 +97,7 @@ KruAI bekerja layaknya sebuah studio rekayasa perangkat lunak profesional dengan
   ┌────────────────────────────────────────────────────────────────────────┐
   │                    FASE 4: STABILISASI & CATATAN JEJAK                 │
   │                                                                        │
-  │    [ 🚀 /role-devops ]  ──► Tes build, bundle size check, & CI/CD      │
+  │    [ 🚀 /role-devops ]  ──► Audit server, tag semver, backup & deploy  │
   │    [ 📜 CHANGELOG.md ]  ──► Catat penambahan, ubahan, & alasan hapus   │
   └────────────────────────────────────────────────────────────────────────┘
 ```
@@ -114,18 +122,16 @@ Ketik `/role` di antarmuka chat AI Anda untuk memanggil kru:
 
 | Shortcut | Status | Tugas Utama | Wewenang Kode |
 |---|---|---|---|
-| `/role-asisten` | ✅ **Aktif** | Pintu masuk utama: wawancara kebutuhan, mitigasi blindspot teknis, pandu pembuatan peran baru. | ❌ Hanya Baca |
-| `/role-onboard` | ✅ **Aktif** | Memahami proyek lanjutan: ekstrak stack, petakan fitur, bangun glossary, rekonsiliasi `.agents/`. | ❌ Hanya Baca |
+| `/role-asisten` | ✅ **Aktif** | Pintu masuk utama (Mode Greenfield, Brownfield, & Fast-Track Hotfix): inisialisasi proyek baru, gali kebutuhan, tulis brief. | ❌ Hanya Baca |
+| `/role-onboard` | ✅ **Aktif** | Memahami proyek lanjutan: ekstrak stack, hasilkan `docs/conventions.md`, petakan fitur, bangun glossary, rekonsiliasi `.agents/`. | ❌ Hanya Baca |
+| `/role-blueprint`| ✅ **Aktif** | Arsitek kontrak: satu-satunya sumber kebenaran skema API & DB (`docs/contract/`) sebelum koding dimulai. | ❌ Hanya Baca |
 | `/role-database` | ✅ **Aktif** | Perancang skema DB, indexing B-Tree/Composite, migrasi idempoten, dan zero data loss. | ✍️ **Ubah Kode** |
-| `/role-backend`  | ✅ **Aktif** | Pembangun API 4-lapis (Routes → Controllers → Services → Repositories), validasi ketat, anti-race condition. | ✍️ **Ubah Kode** |
+| `/role-backend`  | ✅ **Aktif** | Pembangun backend *stack-agnostic*: arsitektur adaptif sesuai `conventions.md`, validasi zero-trust, anti-race condition, & webhook guard. | ✍️ **Ubah Kode** |
 | `/role-frontend` | ✅ **Aktif** | Pembangun UI patuh doktrin visual, anti-AI slop, schema mirroring (form lengkap), dan micro-interactions. | ✍️ **Ubah Kode** |
-| `/role-copywriter`| ✅ **Aktif** | Penulis teks produk, microcopy antarmuka, headline penjualan, dan pembasmi klise AI (6 opsi kerangka). | ✍️ **Ubah Kode (Teks)** |
-| `/role-inspektur`| ✅ **Aktif** | **Auditor Kunci:** Menelusuri rantai UI → API → DB untuk mendeteksi data dummy & audit anti-slop. | ❌ Hanya Baca |
-| `/role-init` | 📝 Rencana | Inisialisasi proyek baru: buat struktur awal, SOP bernomor, dan kontrak awal. | ❌ Hanya Baca |
-| `/role-blueprint`| 📝 Rencana | Arsitek kontrak: satu-satunya sumber kebenaran skema API & DB sebelum koding dimulai. | ❌ Hanya Baca |
-| `/role-motion`   | 📝 Rencana | Konsultan animasi: timing baku 150-300ms, kurva cubic-bezier, dan aksesibilitas reduced-motion. | ❌ Hanya Baca |
+| `/role-copywriter`| ✅ **Aktif** | Penulis teks produk, microcopy antarmuka, headline penjualan, dan pembasmi klise AI (6 opsi kerangka). | ⚠️ Terbatas (Docs/Teks) |
+| `/role-inspektur`| ✅ **Aktif** | **Auditor Kunci:** *Multi-Pass Skeptical Audit* (UI → API → DB, concurrency, webhook, Console tampering, dummy, & anti-slop). | ❌ Hanya Baca |
+| `/role-devops`   | ✅ **Aktif** | Pengawal build, tes, audit server *read-only*, tag rilis semver, backup, deploy terkendali & *live smoke check*. | ⚠️ Terbatas (Config/CI/Tests) |
 | `/role-security` | 📝 Rencana | Penguji celah keamanan OWASP Top 10, validasi IDOR, dan audit kebocoran kredensial. | ❌ Hanya Baca |
-| `/role-devops`   | 📝 Rencana | Pengawal build, unit testing, CI/CD, dan audit ukuran bundle. | ⚠️ Terbatas Config |
 
 ---
 
@@ -135,7 +141,9 @@ KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak
 * **Anti-AI Slop UI:** Diadopsi dari *Vercel Web Interface Guidelines* & W3C WCAG 2.1 ([references/anti-ai-slop-ui.md](.agents/references/anti-ai-slop-ui.md)).
 * **Copywriting & UX Writing (Anti-AI Text Slop):** 5 kerangka komunitas (`marketingskills`, `ux-writing-skill`, dll.) + Opsi Sintesis Mandiri berkejujuran ([references/copywriting-frameworks.md](.agents/references/copywriting-frameworks.md)).
 * **Arsitektur Backend & Database:** Diadopsi dari *agent-skills-hub* & *Supabase Postgres Best Practices* ([references/backend-architecture-best-practices.md](.agents/references/backend-architecture-best-practices.md)).
-* **Matriks Spesifikasi Fitur:** Taksonomi modul production-ready (Auth, Katalog, Checkout, Media Studio) ([references/feature-matrix.md](.agents/references/feature-matrix.md)).
+* **Keamanan Transaksi, Concurrency & State:** Prinsip *Zero-Trust Payload*, *ACID Row Locking*, *Payment Webhook State Machine*, *Cache Hygiene*, & *External API Contract Check* ([references/transaction-and-state-security.md](.agents/references/transaction-and-state-security.md)).
+* **Panduan Model Orchestrator & Lifecycle Hooks:** Panduan memilih `Orchestrator (Neon/Argon)` vs `Hydrogen` dan konfigurasi `.agents/hooks.json` ([references/orchestrator-and-hooks-guide.md](.agents/references/orchestrator-and-hooks-guide.md)).
+* **Matriks Spesifikasi Fitur:** Pola Generik Lintas Domain (*CRUD Admin*, *Dashboard/Reporting*, *File Upload*) & modul Auth, Katalog, Checkout, Media Studio ([references/feature-matrix.md](.agents/references/feature-matrix.md)).
 * **Multi-Dimensional Design Tokens:** Gaya desain independen (Minimalist, Luxury, Studio Dark, Neo-Brutalism) ([references/design-styles.md](.agents/references/design-styles.md)).
 
 ---
@@ -143,16 +151,16 @@ KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak
 ## ⚡ Prinsip Kerja KruAI
 
 1. **Progressive Reading (Baca 1 Buku Inti):** AI tidak dipaksa membaca ratusan buku referensi sekaligus. Asisten mensintesis aturan ke `docs/conventions.md` khusus untuk stack terpilih (misal: LaraVue, Next.js). Peran pembangun hanya membaca file tersebut.
-2. **Context Window Guard & Phase-Gating:** Jika tugas menyentuh >3 file atau >200 baris kode, tugas WAJIB dipecah menjadi fase bertahap agar AI tidak hilang ingatan.
+2. **Context Window Guard & Phase-Gating:** Tugas dibatasi per **1 *vertical slice* fitur atau 1 layer domain** (maksimal ≤8 file / ≤400 baris kode; ≤3–5 file kritis untuk modul transaksi/risiko `ketat`), dan wajib dipecah per fase jika melintasi DB + Backend + Frontend agar AI tidak hilang ingatan.
 3. **Schema Mirroring Rule:** Form di sisi admin WAJIB mencerminkan 100% kolom database. Dilarang menyunat form demi mengejar fast-working.
-4. **Live Registry Ping:** Dilarang menebak versi dependensi dari data training lama. KruAI memverifikasi versi rilis real-time langsung ke registry resmi (`npm view`, `curl pypi`).
+4. **Live Registry Ping:** Dilarang menebak versi dependensi dari data training lama. KruAI memverifikasi versi rilis real-time langsung ke registry resmi (`npm view`, `composer show`, `curl pypi`).
 
 ---
 
 ## 🗺️ Roadmap Distribusi
 
 - [x] **Fase 1: Core Agent Roles & Protocol** (Selesai — Struktur `.agents/` lokal teruji).
-- [x] **Fase 2: NPM CLI Scaffolder (`npx kruai init`)** (Selesai — Tool CLI `bin/kruai.js` zero-dependency, siap publish ke npm).
+- [x] **Fase 2: NPM CLI Scaffolder (`bin/kruai.js`)** (Selesai — Mendukung `init`, `update`, `doctor`, Multi-IDE `--ide`, `--with-hooks`, dan test suite `node:test`, siap publish ke npm).
 - [ ] **Fase 3: KruAI MCP Server** (Menyediakan server Model Context Protocol terpusat di GitHub dengan shared learning database).
 
 ---

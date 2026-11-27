@@ -2,7 +2,7 @@
 name: role-onboard
 description: >-
   Untuk proyek lanjutan yang sudah ada: baca kode, pahami stack beserta alasannya, lalu buat
-  project-brief, project-map, glossary, dan baseline. Hanya membaca, tidak mengubah kode.
+  project-brief, conventions, project-map, glossary, dan baseline. Hanya membaca, tidak mengubah kode.
 ---
 
 # role-onboard
@@ -32,11 +32,12 @@ mengikuti pola yang sudah ada. **Hanya membaca kode**; hanya menulis ke `docs/`.
    memasangnya sendiri.
 8. **Profil risiko**: usulkan berdasarkan temuan, **minta user mengonfirmasi**. Jika ragu,
    pilih tingkat lebih tinggi.
-9. **Tulis dokumen** dari `.agents/templates/`: `docs/project-brief.md`, `project-map.md`,
-   `glossary.md`; sertakan tanggal dan commit verifikasi. Jaga ringkas.
-10. **Laporan** + handoff untuk temuan (stack usang, duplikasi, dummy, kerentanan) tanpa
-    mengubah apa pun. Tutup dengan "ada lagi yang bisa dibantu?" dan sarankan `/role-asisten`
-    untuk menyusun tugas berikutnya.
+9. **Tulis dokumen** dari `.agents/templates/`:
+   - `docs/project-brief.md`, `docs/project-map.md`, `docs/glossary.md` (sertakan tanggal dan commit verifikasi; jaga ringkas).
+   - **Wajib `docs/conventions.md`** (menggunakan `.agents/templates/conventions.md`): isi dengan stack & versi aktual terverifikasi, pola arsitektur framework proyek (termasuk jika berbasis *component-driven* seperti Livewire/Filament atau Next.js Server Actions), perintah tes/lint/build nyata, serta *golden code sample* dari repositori agar peran pembangun tidak menebak konvensi stack.
+10. **Laporan, penutupan handoff & handoff temuan:**
+    - Jika sesi onboarding dipicu oleh tiket handoff `open`, perbarui file handoff tersebut menjadi `Status: done` dan isi `Diselesaikan di:` dengan tautan laporan.
+    - Simpan laporan ke `docs/reports/YYYY-MM-DD-onboard-<topik>.md` + buat handoff untuk temuan (stack usang, duplikasi, dummy, kerentanan) tanpa mengubah kode aplikasi. Tutup dengan *"ada lagi yang bisa dibantu?"* dan sarankan `/role-asisten` untuk menyusun tugas berikutnya.
 
 ## Pembaruan (jika dokumen sudah ada)
 Bandingkan commit verifikasi dengan `git diff`; periksa **hanya bagian yang berubah**, lalu

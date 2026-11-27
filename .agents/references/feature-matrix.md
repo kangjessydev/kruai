@@ -2,7 +2,40 @@
 
 Dokumen acuan untuk `role-asisten` dan `role-blueprint` dalam merumuskan skenario kebutuhan lengkap, serta untuk `role-backend` dan `role-frontend` agar tidak melakukan jalan pintas (*fast-working asal jadi*).
 
-Setiap fitur yang dirancang **WAJIB** memenuhi Skenario Fungsional & Kriteria Selesai (Definition of Done) di bawah ini.
+Setiap fitur yang dirancang **WAJIB** menerapkan **Seksi 0 (Pola Generik Lintas Domain)**, lalu memadukannya dengan modul domain spesifik (Seksi 1–4) sesuai kebutuhan proyek.
+
+---
+
+## 0. Pola Generik Lintas Domain (Berlaku untuk Semua Jenis Proyek)
+
+### A. Pola CRUD & Manajemen Data Admin (*Generic CRUD Entity*)
+- **Fitur Fundamental (Pondasi Wajib):**
+  - Daftar data terpaginasi (cursor/indexed pagination), pencarian teks *debounced* 300ms, dan filter status/kategori yang tidak memicu query N+1.
+  - Form Create & Edit **100% Cermin Skema Database** (dilarang menyunat kolom bisnis seperti slug, status, catatan, metadata, atau relasi penting).
+  - Validasi dua sisi (client inline + server schema/request validator), dialog konfirmasi untuk aksi destruktif, *soft-delete* (`deleted_at`) untuk entitas bisnis penting, serta timestamp audit (`created_at`, `updated_at`).
+  - Penanganan lengkap *loading skeleton/spinner*, *empty state* yang memandu aksi pertama, dan *error state* ramah.
+- **Fitur Lanjutan (Extended):**
+  - *Bulk action* via background job queue (jika menyentuh >500 baris agar tidak HTTP timeout).
+  - Impor/ekspor CSV/Excel dengan laporan validasi error per baris.
+  - Audit log riwayat perubahan field (siapa mengubah apa, nilai lama vs baru, kapan).
+
+### B. Pola Dashboard, Analitik & Laporan (*Dashboard & Reporting*)
+- **Fitur Fundamental (Pondasi Wajib):**
+  - Kartu KPI & tabel metrik wajib memakai `tabular-nums`, satuan eksplisit (Rp, %, unit), serta definisi agregasi yang jelas.
+  - Filter rentang tanggal wajib memiliki batas maksimal default agar tidak memicu *full-table scan* atau OOM.
+  - Seluruh agregasi (`SUM`, `COUNT`, `AVG`, grouping) dieksekusi di database/server, bukan menarik ribuan baris mentah lalu dihitung di frontend.
+  - Konsistensi zona waktu: simpan `UTC`/`TIMESTAMPTZ` di DB, konversi ke zona waktu pengguna/toko secara eksplisit saat filter & tampilkan laporan (termasuk batas tutup shift/Z-Report).
+- **Fitur Lanjutan (Extended):**
+  - Ekspor laporan PDF/Excel asinkronus, perbandingan periode (MoM/YoY), *drill-down* interaktif, dan pengiriman laporan terjadwal.
+
+### C. Pola Unggah Berkas & Media (*File Upload & Media Handling*)
+- **Fitur Fundamental (Pondasi Wajib):**
+  - Validasi tipe MIME aktual dan ekstensi file di **server** (jangan hanya mengandalkan atribut HTML `accept` atau nama ekstensi).
+  - Batas ukuran file eksplisit di klien, server aplikasi, dan web server; penamaan file aman berbasis UUID/sanitized slug (anti *path traversal*).
+  - Indikator progres unggahan, preview jelas dengan dimensi eksplisit (zero CLS), serta pembersihan file yatim (*orphan file*) saat entitas induk dihapus.
+- **Fitur Lanjutan (Extended):**
+  - *Direct upload* via Pre-Signed URL langsung ke Object Storage (S3 / Cloudflare R2 / GCS) tanpa membebani RAM server aplikasi.
+  - Konversi otomatis `.webp`/`.avif` dan pembuatan thumbnail via background worker, serta pemindaian keamanan file untuk profil risiko `ketat`.
 
 ---
 

@@ -21,17 +21,19 @@ Ikuti `.agents/rules/team-protocol.md`. Peran pembangun: berwenang membuat dan m
 
 ### 1. Baca Masukan Wajib (Progressive Reading)
 Sebelum merancang atau menulis skema, baca:
-1. `docs/project-brief.md` (memahami domain bisnis dan profil risiko).
-2. `docs/conventions.md` (stack database yang disepakati, misal Postgres/Supabase, MySQL, SQLite/Turso, MongoDB).
-3. `docs/contract/` (skema database eksisting yang menjadi sumber kebenaran).
-4. `docs/glossary.md` (gunakan penamaan entitas yang baku, jangan membuat istilah baru).
-5. Dokumen acuan standar:
+1. **Masukan Wajib (selalu baca):**
+   - `docs/project-brief.md` (memahami domain bisnis dan profil risiko).
+   - `docs/conventions.md` (stack database yang disepakati, misal Postgres/Supabase, MySQL, SQLite/Turso, MongoDB).
+   - `docs/contract/` (skema database eksisting yang menjadi sumber kebenaran).
+   - `docs/glossary.md` (gunakan penamaan entitas yang baku, jangan membuat istilah baru).
+   - Handoff berstatus `open` yang ditujukan ke `role-database`.
+2. **Referensi On-Demand** *(baca HANYA jika `docs/conventions.md` belum mencakup detail aturan spesifik)*:
    - `.agents/references/backend-architecture-best-practices.md` (Seksi 3: Optimasi Database & Integritas Skema).
    - `.agents/references/feature-matrix.md` (Kriteria Definition of Done untuk modul yang bersangkutan).
 
 ### 2. Pra-Pemeriksaan & Pemeriksaan Skala (Context Guard)
 - Cari skema yang sudah ada di repositori (`grep` direktori `prisma/`, `drizzle/`, `migrations/`, `database/`). Gunakan kembali entitas yang ada jika memungkinkan.
-- **Pemeriksaan Skala:** Jika tugas menyentuh lebih dari 3 tabel baru atau berpotensi melebihi 200 baris migrasi SQL, pecah tugas menjadi beberapa fase (misal: Fase 1: Tabel Master & Relasi Utama, Fase 2: Tabel Transaksional & Indexing).
+- **Pemeriksaan Skala:** Jika tugas menyentuh **>1 domain modul**, **>5 tabel baru**, berpotensi **>300 baris migrasi SQL**, atau melakukan perubahan skema produksi berisiko `ketat`, pecah tugas menjadi beberapa fase (misal: Fase 1: Tabel Master & Relasi Utama, Fase 2: Tabel Transaksional & Indexing).
 
 ### 3. Ajukan Rencana & Tunggu Persetujuan User
 Tuliskan rencana terstruktur kepada user sebelum menulis berkas migrasi:
@@ -68,8 +70,9 @@ Setelah migrasi selesai dan diverifikasi:
 2. Perbarui `docs/project-map.md` (tambahkan tabel dan relasi baru ke peta proyek).
 3. Jika ada istilah baru, catat di `docs/glossary.md`.
 
-### 7. Laporan & Handoff
-1. Simpan laporan sesi ke `docs/reports/YYYY-MM-DD-database-<topik>.md` menggunakan template `.agents/templates/report.md`.
-2. Buat tiket handoff ke `role-backend` di `docs/handoff/YYYY-MM-DD-database-to-backend-<topik>.md` menggunakan template `.agents/templates/handoff.md`. Handoff memuat:
+### 7. Laporan, Penutupan Handoff & Handoff Berikutnya
+1. **Tutup Handoff Masuk:** Jika sesi ini mengerjakan tiket handoff `open` untuk `role-database`, perbarui file handoff tersebut menjadi `Status: done` dan isi field `Diselesaikan di:` dengan tautan laporan.
+2. Simpan laporan sesi ke `docs/reports/YYYY-MM-DD-database-<topik>.md` menggunakan template `.agents/templates/report.md`.
+3. Buat tiket handoff ke `role-backend` di `docs/handoff/YYYY-MM-DD-database-to-backend-<topik>.md` menggunakan template `.agents/templates/handoff.md`. Handoff memuat:
    - Tabel/kolom baru yang siap digunakan.
    - Aturan constraint, unique key, dan relasi yang wajib divalidasi di layer backend.

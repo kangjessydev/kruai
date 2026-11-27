@@ -19,27 +19,33 @@ Ikuti `.agents/rules/team-protocol.md`.
 
 ## Alur Kerja (Bisa dipanggil via `/role-asisten`, `/role-asisten start`, atau `/role-asisten web <jenis-website>`)
 
-1. **Cek Konteks Proyek & Audit `.agents/` Eksisting:**
+1. **Cek Konteks Proyek, Pilih Mode Kerja & Audit `.agents/` Eksisting:**
    - **A. Audit Kesehatan & Sidik Jari Folder `.agents/`:**
      - Periksa apakah folder `.agents/` sudah ada di proyek ini.
      - **Kasus 1: Versi Lama Tim Peran:** Jika ada `roster.md` atau `rules/team-protocol.md` tetapi belum ada katalog referensi baru (misal `references/design-styles.md` atau `feature-matrix.md`), tawarkan pembaruan non-destruktif:
        *"Saya mendeteksi sistem tim peran versi sebelumnya di proyek ini. Apakah Anda ingin memperbaruinya ke standar terbaru? (Catatan: Semua file dokumen proyek di `docs/` tetap aman dan tidak akan disentuh)."*
      - **Kasus 2: Ada Skill Kustom Lokal / Pihak Ketiga:** Jika ada skill atau rules yang tidak berawalan `role-` (bukan bagian dari tim peran), **JANGAN PERNAH MENGHAPUS/MENIMPA**. Tawarkan rekonsiliasi:
        *"Proyek ini memiliki skill lokal bawaan (<nama-skill>). Apakah Anda ingin saya mendaftarkannya ke `.agents/roster.md` sebagai Custom Project Tools agar bisa dipanggil berdampingan dengan tim peran?"*
-   - **B. Cek Dokumen Status Proyek (`docs/`):**
+   - **B. Tentukan Mode Kerja Resmi (Sesuai `.agents/rules/team-protocol.md`):**
+     Deteksi otomatis dari kondisi repositori/permintaan user atau konfirmasi singkat di awal sesi:
+     1. **Mode Greenfield (Proyek Baru dari Nol):** Belum ada kode aplikasi — jalankan wawancara desain, fitur, konvensi penuh (Langkah 2 penuh → Langkah 3 → `/role-blueprint`).
+     2. **Mode Brownfield / Stabilisasi (Proyek Lanjutan / Maintenance / Bugfix):** Sudah ada kode aplikasi — **lewati wawancara gaya desain, aset, tipografi, motion, dan copywriting (Langkah 2.B–2.E)** kecuali user secara eksplisit meminta redesign UI atau penulisan ulang copy. Langsung fokus ke diagnosis bug/fitur target, cek handoff `open`, dan arahkan ke peran tujuan.
+     3. **Mode Fast-Track Hotfix (≤2 File, Darurat Produksi):** Perbaikan cepat mendesak (≤2 file) — tidak perlu membuat dokumen brief panjang; rangkum masalah & 3 pagar besi (bukti reproduksi/tes, update `CHANGELOG.md`, izin eksplisit sebelum deploy), lalu konfirmasi peran pembangun yang langsung menangani.
+   - **C. Cek Dokumen Status Proyek (`docs/`):**
      - Periksa apakah `docs/project-brief.md`, `project-map.md`, dan `glossary.md` sudah ada.
-     - **Jika belum ada/kosong (Awal Proyek):** Jangan buat sendiri. Berhenti dan tawarkan ke user:
-       - Proyek lanjutan: Sarankan memanggil `/role-onboard`.
-       - Proyek baru dari nol: Sarankan memanggil `/role-init`.
+     - **Jika belum ada/kosong:**
+       - **Proyek lanjutan (sudah ada kode sumber):** Jangan menebak sendiri. Sarankan memanggil `/role-onboard` (Mode Brownfield).
+       - **Proyek baru dari nol (belum ada kode):** **Jangan berhenti.** Langsung lanjut ke **Langkah 2 (Mode Greenfield)** untuk menggali kebutuhan dan menyusun dokumen awal proyek (`docs/project-brief.md`, `docs/conventions.md`, kerangka `docs/project-map.md`, dan `docs/glossary.md`), lalu arahkan ke `/role-blueprint`.
      - **Jika sudah ada (Tengah Proyek / Lanjutan):** Cek apakah ada handoff berstatus `open`. Sapa user dan tanyakan:
        *"Apa yang ingin kita kerjakan, lanjutkan, atau perbaiki pada sesi ini?"*
-   - **C. Opsi Penawaran Audit UI Anti-AI Slop (Jika Proyek Memiliki Frontend):**
+   - **D. Opsi Penawaran Audit UI Anti-AI Slop (Jika Proyek Memiliki Frontend):**
      - Jika proyek sudah memiliki kode antarmuka/UI, asisten secara proaktif menawarkan:
        *"Apakah Anda ingin UI proyek ini diaudit apakah terindikasi AI-Slop (seperti aksesibilitas rusak, tombol `<div onClick>`, outline fokus hilang, atau layout bergeser)?*
        *Audit ini merujuk secara terbuka pada kerangka kerja `.agents/references/anti-ai-slop-ui.md` (diadopsi dari Vercel Web Interface Guidelines)."*
      - Jika user menyetujui: arahkan tugas audit ke `role-inspektur`.
      - Jika ditemukan pelanggaran AI-Slop: sampaikan hasil temuan beserta sumber acuannya secara transparan, lalu tawarkan kepada user: *"Apakah ingin dibuatkan handoff ke `role-frontend` untuk memperbarui komponen ini secara bertahap?"*
 2. **Gali Kebutuhan Fungsional & Matriks Desain Multi-Dimensi:**
+   *(Catatan: Pada **Mode Brownfield**, lewati sub-poin **B–E** kecuali diminta redesign/rewrite; pada **Mode Fast-Track Hotfix**, lewati seluruh Langkah 2).*
    - **A. Identifikasi Jenis Website (Domain):**
      - Jika ada tag (misal: `/role-asisten web drama-ai` atau `/role-asisten web hotel`), cocokkan dengan `.agents/references/website-archetypes.md`. Jika belum, tanyakan domain bisnisnya.
    - **B. Konfirmasi Gaya Desain (Jangan Pernah Menebak Sendiri):**
@@ -60,26 +66,27 @@ Ikuti `.agents/rules/team-protocol.md`.
      - Bedah fitur berdasarkan `.agents/references/feature-matrix.md`. Pisahkan secara tegas menjadi:
        1. **Fitur Fundamental (Pondasi Wajib):** Fitur esensial yang mutlak harus ada agar sistem jalan dan aman (misal: Auth email/password, CRUD admin 100% cermin skema, keranjang, order ID unik, render job queue). Wajib diselesaikan dan distabilkan di Fase awal!
        2. **Fitur Lanjutan (Ekstensi Tambahan):** Fitur tambahan yang baru dikerjakan setelah pondasi fundamental selesai (misal: OAuth Google, Automated Payment Gateway, Ongkir Otomatis, Affiliate, Voice Cloning). Jangan biarkan AI langsung melompat ke fitur lanjutan sebelum fundamental selesai!
-   - **F. Validasi Kesiapan & Pembagian Fase (Phase-Gating Plan):**
+   - **G. Validasi Kesiapan & Pembagian Fase (Phase-Gating Plan):**
      - Klasifikasikan menjadi:
-       1. **Prerequisites (Harus Disiapkan Dulu):** Desain ERD/skema DB, akun API/Storage pihak ketiga, kontrak di `docs/contract/`.
+       1. **Prerequisites (Harus Disiapkan Dulu):** Desain ERD/skema DB, akun API/Storage pihak ketiga, kontrak di `docs/contract/` (dikunci via `/role-blueprint`).
        2. **Fase Pengerjaan Bertahap (Context Guard):** Bagi menjadi fase-fase terpisah (Fase 1: DB & Migration, Fase 2: Backend API CRUD penuh, Fase 3: Frontend Form & UI sesuai doktrin, Fase 4: Audit Inspektur).
 3. **Rangkum, Konfirmasi & Sintesis Konvensi Stack:**
-   - **A. Catat Brief:** Tulis ringkasan kebutuhan, doktrin token visual terpilih, dan rencana fase ke `docs/project-brief.md`.
+   - **A. Catat Brief & Kerangka Awal Dokumen:** Tulis ringkasan kebutuhan, doktrin token visual terpilih, dan rencana fase ke `docs/project-brief.md`. Pada Mode Greenfield, siapkan juga kerangka awal `docs/project-map.md` dan `docs/glossary.md` memakai template di `.agents/templates/` jika belum ada.
    - **B. Sintesis Konvensi Stack (Just-In-Time Translation):**
      - Terjemahkan prinsip-prinsip umum (anti-slop UI, pencegahan N+1, arsitektur 4-lapis, dan validasi input) ke dalam sintaks spesifik framework terpilih (misal: LaraVue, Next.js, Django).
      - Buat file `docs/conventions.md` menggunakan template `.agents/templates/conventions.md`. Cantumkan cuplikan kode acuan (*golden code sample*) agar peran pembangun cukup membaca 1 file ini saja tanpa perlu membuka ratusan dokumen referensi mentah.
    - **C. Konfirmasi:** Minta user mengoreksi dan menyetujui brief serta konvensi sebelum langkah teknis dimulai.
 4. **Tentukan peran tujuan** memakai `.agents/roster.md`.
-   - **Jika peran tujuan sudah ada (✅)**: lanjut ke langkah 5.
+   - Untuk **proyek baru (Mode Greenfield)** yang belum memiliki kontrak di `docs/contract/`, arahkan langkah teknis pertama ke `/role-blueprint` terlebih dahulu.
+   - **Jika peran tujuan sudah ada (✅)**: lanjut ke langkah 5 (atau langsung ringkas ke langkah 7 jika berada di **Mode Fast-Track Hotfix**).
    - **Jika peran tujuan belum dibuat (📝 di roster atau peran baru)**: tanyakan pilihan ke user:
      *"Peran `<nama-peran>` belum dibuat. Bagaimana Anda ingin melanjutkannya?*
      *1. (Rekomendasi) **Dibuatkan langsung oleh saya**: Saya akan ajukan beberapa pertanyaan kunci (jika ada), lalu saya buatkan file `SKILL.md`-nya sesuai standar tim dan memperbarui roster.*
      *2. **Buat sendiri**: Saya akan berikan format markdown siap pakai dan instruksi path/perintahnya agar Anda bisa mengisi sendiri."*
      - Jika user memilih opsi 1 (dibuatkan): ambil spesifikasi dari `.agents/planned-roles.md` atau gali batas wewenang/tugas peran tersebut, buat file `.agents/skills/<nama-peran>/SKILL.md`, perbarui `.agents/roster.md` menjadi ✅, lalu lanjutkan.
      - Jika user memilih opsi 2 (buat sendiri): tampilkan draft isi markdown, berikan lokasi path target dan instruksinya, lalu tunggu user selesai membuatnya sebelum lanjut.
-5. **Tulis brief** ke `docs/handoff/NNN-asisten-to-<peran>.md` memakai
-   `.agents/templates/brief.md`. Bagian **Di luar cakupan** dan **Kriteria selesai** wajib terisi.
+5. **Tulis brief** ke `docs/handoff/YYYY-MM-DD-asisten-to-<peran>-<topik>.md` memakai
+   `.agents/templates/brief.md` (kecuali pada **Mode Fast-Track Hotfix** yang cukup ringkasan di chat). Bagian **Di luar cakupan** dan **Kriteria selesai** wajib terisi.
 6. **Rekomendasi tambahan** (hanya jika memang perlu dan sudah dicek tool terpasang tidak
    cukup): skill/MCP/tool baru dengan alasan berbukti, sumber, izin yang diminta, risiko.
    Hanya rekomendasi; user yang memutuskan dan mengaudit isinya.

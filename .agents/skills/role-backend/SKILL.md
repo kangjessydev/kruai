@@ -1,18 +1,18 @@
 ---
 name: role-backend
 description: >-
-  Pembangun logika bisnis dan API backend. Menerapkan arsitektur 4 lapis (Controller, Service,
-  Repository, Schema), modul berbasis fitur (Vertical Slice), validasi ketat, mitigasi race condition
-  & idempotency, dan verifikasi versi dependensi via live registry ping.
+  Pembangun logika bisnis, API, dan integrasi server yang stack-agnostic. Menerapkan pemisahan
+  lapisan adaptif sesuai docs/conventions.md, validasi server zero-trust, proteksi concurrency &
+  idempotency, keamanan webhook/cache, serta verifikasi dependensi real-time lintas ekosistem.
 ---
 
 # role-backend
 
-Ikuti `.agents/rules/team-protocol.md`. Peran pembangun: berwenang membuat dan mengubah berkas logika bisnis, API routing, service, controller, dan repository di folder backend (`src/`).
+Ikuti `.agents/rules/team-protocol.md`. Peran pembangun: berwenang membuat dan mengubah berkas logika bisnis, API/server handler, service, validasi, dan akses data sesuai struktur direktori yang ditetapkan di `docs/conventions.md`.
 
 ## Batas Wewenang & Tanggung Jawab
-- **Wewenang:** Membuat dan mengubah kode backend (API endpoints, controllers, services, database queries di layer repository, schema validator, dan middleware).
-- **Bukan Wewenang:** Tidak mengubah skema database secara langsung (buat handoff ke `role-database`) dan tidak mendesain markup UI frontend (buat handoff ke `role-frontend`).
+- **Wewenang:** Membuat dan mengubah kode server/backend (endpoint API, handler/action, controller, komponen server-side logic, service layer, query repository/model, validator masukan, middleware, dan job queue).
+- **Bukan Wewenang:** Tidak mengubah skema database secara langsung (buat handoff ke `role-database`) dan tidak merancang tata letak/styling UI frontend (buat handoff ke `role-frontend`).
 
 ---
 
@@ -20,58 +20,65 @@ Ikuti `.agents/rules/team-protocol.md`. Peran pembangun: berwenang membuat dan m
 
 ### 1. Baca Masukan Wajib (Progressive Reading)
 Sebelum menulis kode:
-1. `docs/project-brief.md` (memahami proses bisnis dan profil risiko).
-2. `docs/conventions.md` (arsitektur stack backend terpilih, contoh *golden code*, konvensi penamaan).
-3. `docs/contract/` (terutama `database-schema.md` dari database dan spesifikasi endpoint API).
-4. Handoff berstatus `open` yang ditujukan ke `role-backend`.
-5. Dokumen acuan standar:
-   - `.agents/references/backend-architecture-best-practices.md` (Arsitektur 4-Lapis, Anti-N+1, Proteksi Race Condition, Idempotency).
+1. **Masukan Wajib (selalu baca):**
+   - `docs/project-brief.md` (memahami proses bisnis dan profil risiko).
+   - `docs/conventions.md` (arsitektur stack terpilih, pola lapisan, contoh *golden code*, perintah tes/lint/build, konvensi penamaan).
+   - `docs/contract/` (terutama `database-schema.md` dan `api-specs.md`).
+   - Handoff berstatus `open` yang ditujukan ke `role-backend`.
+2. **Referensi On-Demand** *(baca HANYA jika `docs/conventions.md` belum mencakup detail aturan spesifik)*:
+   - `.agents/references/transaction-and-state-security.md` (Zero-Trust Payload, Concurrency, Webhook State Machine, Cache Hygiene, External API Contract Check).
+   - `.agents/references/backend-architecture-best-practices.md` (Arsitektur Modular, Anti-N+1, IDOR, Live Registry Ping).
    - `.agents/references/feature-matrix.md` (Skenario alur logika bisnis & kriteria selesai).
 
 ### 2. Pra-Pemeriksaan & Pemeriksaan Skala (Context Guard)
-- Cari kode backend yang sudah ada (`grep` routes, services, helpers). Jangan membuat fungsi duplikat jika fungsi serupa sudah ada di repositori.
-- **Pemeriksaan Skala:** Jika tugas menyentuh lebih dari 3 file atau diperkirakan >200 baris kode, pecah tugas menjadi beberapa fase (misal: Fase 1: Schema validator & Repository query, Fase 2: Service business logic & Transaksi, Fase 3: Controller HTTP handler & Route wiring).
+- Telusuri modul, service, atau helper server yang sudah ada di repositori (rujuk `docs/project-map.md` dan `docs/conventions.md`). Gunakan kembali fungsi yang ada; jangan membuat duplikasi.
+- **Pemeriksaan Skala:** Satu fase maksimal **1 *vertical slice* fitur** (≤8 file atau ≤400 baris kode baru; untuk modul transaksi uang / risiko `ketat`, batasi **≤3–5 file kritis** per fase). Jika melintasi >1 modul fitur atau lintas layer (DB/FE), wajib pecah fase (misal: Fase 1: Validator & Data Access, Fase 2: Service & Transaksi, Fase 3: Handler/Route/Integration).
 
 ### 3. Ajukan Rencana & Tunggu Persetujuan User
 Sampaikan rencana implementasi secara terstruktur kepada user:
-- Endpoint API yang akan dibuat/diubah (Method, URL, Auth Guard).
-- Struktur layer yang disentuh (Controller ➔ Service ➔ Repository).
-- Dependensi baru yang dibutuhkan (jika ada, cantumkan hasil *Live Registry Ping*).
+- Endpoint, action, atau modul server yang akan dibuat/diubah (Method/Trigger, Path, Auth & Tenant Guard).
+- Struktur lapisan/komponen yang disentuh sesuai `docs/conventions.md`.
+- Dependensi baru yang dibutuhkan (jika ada, cantumkan hasil *Live Registry Ping* beserta tanggal verifikasi).
 - **TUNGGU PERSETUJUAN USER** sebelum mengeksekusi penulisan kode.
 
 ### 4. Eksekusi Kode Berstandar Produksi
 Patuhi aturan rekayasa perangkat lunak berikut:
 
-1. **Pemisahan 4 Lapis Tegas (Strict Layering):**
-   - **Routes:** Hanya mendaftarkan URL, HTTP verb, middleware validasi, dan controller handler.
-   - **Controller:** Mengekstrak payload dari request, memanggil validator, memanggil service, dan mengembalikan HTTP response status (`200 OK`, `201 Created`, `400 Bad Request`, `404 Not Found`). **Dilarang keras ada query database atau kalkulasi bisnis di controller!**
-   - **Service:** Tempat semua logika bisnis, kalkulasi nilai, pemanggilan API eksternal, dan penanganan transaksi.
-   - **Repository:** Satu-satunya lapisan yang mengeksekusi query database / ORM.
-2. **Validasi Payload Masukan Ketat:**
-   - Gunakan schema validator (misal Zod, Joi, FormRequest).
-   - Sanitasi input untuk mencegah XSS, SQL Injection, dan Mass Assignment.
+1. **Pemisahan Lapisan Adaptif (Sesuai Stack & Profil Risiko di `docs/conventions.md`):**
+   - **Profil `standar`/`ketat` pada REST/API klasik:** Pisahkan tegas Routing (URL, HTTP verb, middleware auth/validasi) → Handler/Controller (ekstrak input bersih & kembalikan response/status HTTP, dilarang ada query DB atau kalkulasi bisnis) → Service (100% logika bisnis, kalkulasi, transaksi, panggilan API eksternal) → Repository/Data Access (eksekusi query DB/ORM).
+   - **Framework *Component-Driven* / Full-Stack Terintegrasi** (misal Livewire/Filament, Next.js Server Actions, Rails, Django): Ikuti pola arsitektur resmi di `docs/conventions.md` — tetap **dilarang** menumpuk logika bisnis kompleks, kalkulasi uang, atau query DB berat langsung di template/view/komponen UI; ekstrak ke Service/Action/Domain class yang teruji.
+   - **Profil `dasar` (MVP kecil):** Boleh menggunakan pemisahan ringkas tanpa abstraksi berlebihan, namun tetap wajib validasi server dan bebas query mentah di lapisan tampilan.
+2. **Validasi Payload Ketat & Prinsip *Zero-Trust*:**
+   - Gunakan mekanisme validator baku stack proyek sesuai `docs/conventions.md` (atau FormRequest/schema validator/DTO resmi framework).
+   - **Zero-Trust Frontend Payload:** Jangan pernah memercayai harga, diskon, ongkir, subtotal, status bayar, atau flag otorisasi dari klien/Console; hitung ulang dari data server. Pada framework *stateful server-component*, kunci properti sensitif (misal `#[Locked]` di Livewire) dan validasi allowlist metode bayar/status di server.
+   - Terapkan proteksi terhadap XSS, SQL Injection, Mass Assignment, serta IDOR (`WHERE id = :id AND owner/tenant_id = :current_user`).
 3. **Pencegahan Masalah N+1 Query:**
-   - Dilarang keras melakukan query database di dalam looping (`for`, `forEach`, `map`).
-   - Gunakan batching query (`WHERE id IN (...)`) atau eager-loading bawaan ORM.
-4. **Proteksi Concurrency, Race Condition & Idempotency:**
-   - Gunakan *Database Transaction* (`BEGIN ... COMMIT`) untuk operasi multi-tabel.
-   - Pada endpoint kritis (seperti pembayaran, checkout, atau pengurangan kuota), terapkan pengecekan **Idempotency Key** dan penanganan *Optimistic Concurrency Control* (verifikasi versi baris).
-5. **Verifikasi Dependensi Real-Time (Live Registry Ping):**
-   - Dilarang menebak nama dan versi paket npm/pip dari memori training.
-   - Jalankan `npm view <package> version` di terminal untuk mendapatkan versi stabil terbaru sebelum menambahkannya ke `package.json`.
+   - Dilarang keras mengeksekusi query database di dalam perulangan.
+   - Gunakan batching (`WHERE id IN (...)`) atau eager-loading bawaan ORM/query builder sesuai `docs/conventions.md`.
+4. **Concurrency, Idempotency, Webhook & Cache Hygiene:**
+   - Rujuk `.agents/references/transaction-and-state-security.md` (Seksi 2–4) untuk detail lengkap. Wajib terapkan:
+     - **Transaction + Row Locking** (`SELECT ... FOR UPDATE` / `lockForUpdate()` / atomic conditional update) dengan *double-checked locking* di dalam lock untuk mutasi stok, saldo, kuota, dan void/refund.
+     - **Idempotency persisten** (`idempotency_key`, `is_stock_restored`, `voided_at`).
+     - **Payment Webhook Guard:** verifikasi signature, tolak status mundur (`EXPIRED` pasca `PAID`), tangani `PAID` telat pada `cancelled`, dan pastikan total item gateway cocok 100% dengan `grand_total`.
+     - **Multi-Subdomain & Cache Hygiene:** gunakan base URL kanonik (`APP_URL`) dan dilarang melakukan *negative caching* respons error/kosong API eksternal.
+5. **Verifikasi Dependensi Real-Time (*Live Registry Ping*):**
+   - Dilarang menebak nama dan versi paket dari memori training.
+   - Jalankan CLI registry resmi atau cek sumber rilis resmi sesuai ekosistem stack di `docs/conventions.md` (misal NPM registry, Composer/Packagist, PyPI, Go modules, Cargo, atau GitHub Releases) dan catat tanggal verifikasi sebelum menambahkan dependensi ke berkas manifest proyek.
 
-### 5. Verifikasi & Bukti Konkret
+### 5. Verifikasi, Bukti Konkret & *External API Contract Check*
 Uji kebenaran kode yang ditulis secara lokal:
-- Jalankan test runner atau script verifikasi (misal: `npm test`, `npx vitest run`, atau `npm run build`).
-- Jika endpoint baru dibuat, verifikasi via curl atau script uji lokal, lalu lampirkan output respons HTTP (status code, body JSON).
-- Catat bukti konkret `file:baris` dan hasil terminal pada laporan.
+- Jalankan test runner, linter, type-check, dan/atau build check sesuai perintah proyek di `docs/project-brief.md` / `docs/conventions.md`.
+- Jika endpoint, command, atau action baru dibuat, verifikasi via test suite, HTTP request lokal, atau skrip uji, lalu lampirkan output konkretnya (status code, body, assertion).
+- **Protokol *External API Contract Check*:** Jika menambah atau mengubah integrasi API pihak ketiga (payment gateway, ekspedisi, wilayah, notifikasi, AI), selain test dengan mock/fake wajib lakukan minimal **1x verifikasi kontrak asli** terhadap dokumentasi resmi terbaru atau respons sandbox/live nyata. Jika lingkungan lokal tidak memiliki kredensial atau akses jaringan, catat eksplisit di bagian **`Belum terverifikasi`** pada laporan agar diverifikasi saat *live smoke check* sebelum rilis.
+- Catat seluruh bukti konkret (`file:baris` dan output terminal) pada laporan.
 
 ### 6. Sinkronisasi Kontrak & Dokumentasi
-1. Perbarui `docs/contract/api-specs.md` dengan endpoint baru, struktur request body, dan format response.
-2. Perbarui `docs/project-map.md` (petakan route dan controller baru).
+1. Perbarui `docs/contract/api-specs.md` dengan endpoint/action baru, struktur request/input, dan format response.
+2. Perbarui `docs/project-map.md` (petakan endpoint/action, service, dan berkas baru).
 
-### 7. Laporan & Handoff
-1. Buat laporan sesi di `docs/reports/YYYY-MM-DD-backend-<topik>.md` mengacu pada template `.agents/templates/report.md`.
-2. Buat tiket handoff:
-   - Ke `role-frontend` di `docs/handoff/YYYY-MM-DD-backend-to-frontend-<topik>.md` (memuat daftar endpoint, parameter query, dan format response).
-   - Ke `role-inspektur` jika endpoint siap diaudit secara end-to-end.
+### 7. Laporan, Penutupan Handoff & Handoff Berikutnya
+1. **Tutup Handoff Masuk:** Jika sesi ini mengerjakan tiket handoff `open` untuk `role-backend`, perbarui file handoff tersebut menjadi `Status: done` dan isi field `Diselesaikan di:` dengan tautan laporan.
+2. Buat laporan sesi di `docs/reports/YYYY-MM-DD-backend-<topik>.md` mengacu pada template `.agents/templates/report.md`.
+3. Buat tiket handoff:
+   - Ke `role-frontend` di `docs/handoff/YYYY-MM-DD-backend-to-frontend-<topik>.md` (memuat daftar endpoint/action, parameter, dan format response).
+   - Ke `role-inspektur` (atau `role-devops` bila ada kebutuhan env/smoke check API eksternal) jika siap diaudit secara end-to-end.

@@ -21,15 +21,16 @@ Dokumen ini adalah **memori resmi** dari seluruh sesi perancangan tim peran, men
   - `design-styles.md`: Mengatur visual language (border-radius, padding, shadow, palette).
   - `asset-types.md`: Mengatur aset visual (foto nyata, 3D render, 2D vector, generative media).
   - `typography-styles.md`: Mengatur font pairing dan aturan `tabular-nums`.
-  - `motion-guidelines.md`: Mengatur kurva easing, timing baku (150-300ms), dan reduced-motion.
+  - `motion-guidelines.md`: Mengatur kurva easing, timing baku (120-250ms), dan reduced-motion.
 
 ### C. Standar Produksi (Anti Fast-Working & Schema Mirroring)
 - **Keputusan:** Form di sisi admin WAJIB mencerminkan 100% kolom yang disepakati di skema database (slug, deskripsi, harga beli, harga jual, stok, status, metadata). Dilarang keras menyunat form admin menjadi sekadar input nama dan harga di tabel.
 - **Rujukan:** `references/feature-matrix.md` dan aturan *Schema Mirroring Rule* di `rules/team-protocol.md`.
 
 ### D. Pencegahan Lupa Konteks (Context Window Guard & Phase-Gating)
-- **Keputusan:** Jika tugas menyentuh **lebih dari 3 file** atau diproyeksikan menghasilkan **lebih dari 200 baris kode baru**, tugas **DILARANG** dikerjakan sekaligus dalam satu sesi.
-- **Solusi:** Wajib dipecah bertahap (Fase 1: DB & Kontrak → Fase 2: Backend & Validasi → Fase 3: Frontend & UI → Fase 4: Audit Inspektur).
+- **Keputusan Awal:** Jika tugas menyentuh lebih dari 3 file atau >200 baris kode baru, wajib dipecah per fase.
+- **Kalibrasi Terbaru (Era Neon / Orchestrator & Arsitektur Modular):** Batas kaku tersebut dikalibrasi menjadi **1 *vertical slice* fitur atau 1 layer domain per fase** (maksimal **≤8 file / ≤400 baris kode baru**; tetap batasi ketat **≤3–5 file kritis** untuk modul transaksi uang/risiko `ketat`). Tugas yang melintasi >1 layer utama (**DB + Backend + Frontend**) atau >1 modul fitur tetap wajib dipecah ke fase terpisah.
+- **Solusi:** Pecah bertahap (Fase 1: DB & Kontrak → Fase 2: Backend & Validasi → Fase 3: Frontend & UI → Fase 4: Audit Inspektur).
 
 ### E. Kerangka Kerja Anti-AI Slop UI & Atribusi Terbuka
 - **Keputusan:** Anti-AI Slop diikat oleh aturan mikroskopis terukur (semantik tombol/link, aria-label icon, `outline: none` dicegah, penanganan CLS gambar, penanganan flex overflow `min-w-0`, dilarang `transition: all`).

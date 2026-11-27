@@ -17,35 +17,36 @@ Peran tidak saling berbicara langsung dalam satu sesi, melainkan berkomunikasi m
                                  ▼
                      [ 🚪 Pintu Masuk / Intake ]
                            /role-asisten
-                          /       \
-              (Proyek Baru)       (Proyek Lama)
+               (Greenfield / Brownfield / Hotfix)
+                    /                  \
+       (Proyek Baru: Mode Greenfield)   (Proyek Lama)
                    ▼                     ▼
-              /role-init           /role-onboard
-                   \                     /
-                    ▼                   ▼
+      docs/project-brief.md &       /role-onboard
+        docs/conventions.md              /
+                   \                    /
+                    ▼                  ▼
               [ 📐 Perencanaan & Riset ]
               /role-research & /role-blueprint
                                  │
                      ┌───────────┴───────────┐
                      ▼                       ▼
-            [ 🔨 Pembangun ]        [ 🎨 UI & Interaksi ]
-            /role-backend           /role-frontend
-            /role-database          /role-motion
+            [ 🔨 Pembangun ]        [ 🎨 UI & Konten ]
+            /role-backend           /role-frontend (incl. motion)
+            /role-database          /role-copywriter
                      │                       │
                      └───────────┬───────────┘
                                  ▼
                          [ 🔍 Penguji & Audit ]
-                         /role-inspektur (Sinkronisasi UI-API-DB)
-                         /role-security (Keamanan & Vulnerability)
-                         /role-bug-hunter (Reproduksi Bug)
+                         /role-inspektur (Multi-Pass, UI-API-DB & Bug Repro)
+                         /role-security 📝
                                  │
                                  ▼
                          [ 🚀 Rilis & Optimasi ]
-                         /role-devops & /role-simplifier
+                         /role-devops & /role-simplifier 📝
                                  │
                                  ▼
                          [ 🔄 Evaluasi Berkala ]
-                         /role-retro
+                         /role-retro 📝
 ```
 
 ---
@@ -55,38 +56,37 @@ Peran tidak saling berbicara langsung dalam satu sesi, melainkan berkomunikasi m
 ### Kelompok 1: Pintu Masuk (Intake)
 | Peran | Status | Alasan Keberadaan | Tugas Utama |
 |---|---|---|---|
-| `/role-asisten` | ✅ Aktif | Mencegah AI langsung melompat mengetik kode tanpa memahami maksud user; menyortir kebutuhan; mengarahkan ke peran yang tepat. | Interview kebutuhan user, tentukan profil risiko, buat brief tugas, pandu pembuatan peran baru jika belum ada. |
-| `/role-onboard` | ✅ Aktif | Mencegah peran melakukan pemindaian (scan) ulang seluruh proyek di setiap sesi; menjaga agar AI tidak merusak konvensi lama. | Baca kode lama, ekstraksi stack + alasannya, buat `project-map.md`, bangun `glossary.md`, catat baseline tes. |
-| `/role-init` | 📝 Rencana | Standardisasi pembentukan proyek baru agar tidak mengarang struktur sendiri. | Buat struktur folder awal, susun `project-brief.md`, buat SOP bernomor, siapkan kontrak awal. |
+| `/role-asisten` | ✅ Aktif | Mencegah AI langsung melompat mengetik kode tanpa memahami maksud user; memilih mode kerja (*Greenfield* / *Brownfield* / *Hotfix*); mengarahkan ke peran tepat. | Interview kebutuhan user (termasuk inisialisasi proyek baru pada Mode Greenfield), tentukan profil risiko, sintesis `conventions.md`, buat brief tugas, pandu pembuatan peran baru. |
+| `/role-onboard` | ✅ Aktif | Mencegah peran melakukan pemindaian (scan) ulang seluruh proyek di setiap sesi; menjaga agar AI tidak merusak konvensi lama. | Baca kode lama, ekstraksi stack + alasannya, hasilkan `docs/conventions.md`, buat `project-map.md`, bangun `glossary.md`, catat baseline tes. |
+
+*(Catatan: `role-init` dilebur ke **Mode Greenfield** `/role-asisten`; `role-motion` dilebur ke `/role-frontend`; `role-bug-hunter` dilebur ke `/role-inspektur`; `role-help` dilebur ke `/role-asisten`, `.agents/roster.md` & CLI `kruai` — lihat `CHANGELOG.md`.)*
 
 ### Kelompok 2: Perencana (Planners)
 | Peran | Status | Alasan Keberadaan | Tugas Utama |
 |---|---|---|---|
 | `/role-research` | 📝 Rencana | Menghindari AI merekomendasikan library/stack hanya karena populer atau data training lama. | Riset berbasis data real-time terkini (Context7/web), cek rilis & maintenance repo, catat keputusan di `decisions.md`. |
-| `/role-blueprint` | 📝 Rencana | Menjadi satu-satunya sumber kebenaran (Single Source of Truth) antara Frontend dan Backend agar tidak terjadi asumsi data yang berbeda. | Menghasilkan skema kontrak API dan DB di `docs/contract/` sebelum baris kode pertama ditulis. |
+| `/role-blueprint` | ✅ Aktif | Menjadi satu-satunya sumber kebenaran (Single Source of Truth) antara Frontend dan Backend agar tidak terjadi asumsi data yang berbeda. | Menghasilkan dan mengunci skema kontrak API dan DB di `docs/contract/` secara *read-only* sebelum kode aplikasi ditulis. |
 
 ### Kelompok 3: Pembangun (Builders - Boleh Ubah Kode)
 | Peran | Status | Alasan Keberadaan | Tugas Utama |
 |---|---|---|---|
-| `/role-frontend` | 📝 Rencana | Membangun UI yang sesuai identitas brand, responsif, dan bebas dari tampilan generic AI-slop. | Implementasi komponen UI, layout, styling, integrasi API, dan micro-interactions dasar. |
-| `/role-backend` | 📝 Rencana | Memastikan logika bisnis, validasi, dan API endpoint berjalan patuh pada kontrak yang disepakati. | Implementasi endpoint, controller, service layer, autentikasi, dan validasi data masukan. |
-| `/role-database` | 📝 Rencana | Mencegah anomali relasi data, query lambat, atau perubahan skema yang merusak data yang ada. | Desain skema DB, migrasi, indexing, optimasi query, dan seeder data realistis (bukan sekadar placeholder). |
+| `/role-frontend` | ✅ Aktif | Membangun UI yang sesuai identitas brand, responsif, dan bebas dari tampilan generic AI-slop. | Implementasi komponen UI, layout, styling, form 100% cermin skema DB, integrasi API, dan micro-interactions 120–250ms. |
+| `/role-backend` | ✅ Aktif | Memastikan logika bisnis, validasi, dan API endpoint berjalan patuh pada kontrak yang disepakati lintas stack. | Implementasi server logic adaptif sesuai `conventions.md`, validasi zero-trust, anti-race condition, webhook guard, dan live registry ping. |
+| `/role-database` | ✅ Aktif | Mencegah anomali relasi data, query lambat, atau perubahan skema yang merusak data yang ada. | Desain skema DDL/ORM, migrasi idempoten, indexing FK/composite, RLS, dan protokol *zero data loss*. |
+| `/role-copywriter` | ✅ Aktif | Membasmi klise AI (*AI text slop*) pada copy produk, microcopy tombol, pesan error, dan dokumentasi. | Menyusun copy/microcopy & docs (terbatas docs/teks; pemasangan ke UI via handoff `role-frontend` atau edit string langsung dengan izin user). |
 
 ### Kelompok 4: Penguji & Auditor (Auditors - Hanya Baca & Lapor)
 | Peran | Status | Alasan Keberadaan | Tugas Utama |
 |---|---|---|---|
-| `/role-motion` | 📝 Rencana | Mencegah UI terasa kaku seperti kertas atau sebaliknya beranimasi berlebihan/lambat. | Konsultan & auditor timing bezier (150-300ms), kepatuhan `prefers-reduced-motion`, dan pencegahan CLS. |
-| `/role-inspektur` | 📝 Rencana | **Peran Paling Kritis:** Mendeteksi komponen UI yang datanya masih dummy/faker/hardcoded dan belum terhubung ke backend/DB. | Memetakan rantai data: UI -> Endpoint API -> Query DB. Melaporkan status `nyata`, `dummy`, atau `putus`. |
+| `/role-inspektur` | ✅ Aktif | **Peran Paling Kritis:** Mendeteksi celah transaksi, manipulasi state, akar bug, dan komponen UI yang datanya masih dummy/putus. | Menjalankan *Multi-Pass Skeptical Audit* (concurrency, webhook, IDOR, Console tampering), reproduksi bug (`file:baris`), serta memetakan UI → API → DB (`nyata`/`dummy`/`putus`) & audit anti-slop. |
 | `/role-security` | 📝 Rencana | Memastikan kode tidak membawa celah keamanan OWASP, secret bocor, atau dependensi rentan. | Audit dependensi (`npm audit`/`osv-scanner`), deteksi secret (`gitleaks`), verifikasi sanitasi input & RBAC. |
-| `/role-bug-hunter` | 📝 Rencana | Memvalidasi apakah error/bug benar-benar ada dan bisa direproduksi dengan bukti terukur. | Menyusun skenario reproduksi error step-by-step; handoff bukti baris ke backend/frontend. |
 
 ### Kelompok 5: Operasional & Optimasi (Ops & Maintenance)
 | Peran | Status | Alasan Keberadaan | Tugas Utama |
 |---|---|---|---|
-| `/role-devops` | 📝 Rencana | Menjaga kode tetap teruji, bundle tidak bengkak, dan pipeline build siap produksi. | Konfigurasi CI/CD, lint script, analisis ukuran bundle build, docker/containerization. |
+| `/role-devops` | ✅ Aktif | Menjaga kualitas build/tes dan mengamankan proses audit server, tag rilis, backup, serta deploy terkendali. | Local release gate, audit server *read-only*, tag semver, backup & deploy 4 fase dengan *Ownership Guard* & *Live Smoke Check*. |
 | `/role-simplifier` | 📝 Rencana | AI memiliki kecenderungan menulis kode berlebihan (bloatware); peran ini bertugas merampingkan. | Refactoring pasca-fitur selesai: hapus duplikasi kode (`jscpd`), bersihkan kode mati (`knip`), pertahankan tes tetap hijau. |
 | `/role-retro` | 📝 Rencana | Memberikan mekanisme belajar dan perbaikan diri bagi tim peran secara aman. | Meninjau `Log Penyimpangan` dari laporan berkala, menyaring pola sukses berulang, mengusulkan update `SKILL.md`. |
-| `/role-help` | 📝 Rencana | Memberikan panduan cepat bagi user yang lupa shortcut atau pembagian peran. | Menampilkan contekan `roster.md`. |
 
 ---
 

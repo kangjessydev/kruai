@@ -1,0 +1,8 @@
+# Catatan internal & backlog masalah starter KruAI (lokal saja, jangan di-push ke GitHub)
+private-notes/
+
+# Standar Node.js & OS
+node_modules/
+.DS_Store
+.env
+.env.*

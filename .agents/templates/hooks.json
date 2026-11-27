@@ -1,0 +1,32 @@
+{
+  "kruai-destructive-command-guard": {
+    "enabled": false,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const cmd=(j.toolCall&&j.toolCall.args&&j.toolCall.args.CommandLine)||'';const risky=/git\\s+push\\s+--force|\\b(DROP\\s+TABLE|TRUNCATE)\\b|rm\\s+-rf\\s+\\/(\\s|$)/i.test(cmd);console.log(JSON.stringify(risky?{decision:'force_ask',reason:'Perintah berisiko terdeteksi oleh KruAI hook.'}:{decision:'allow'}));}catch{console.log(JSON.stringify({decision:'allow'}));}});\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "kruai-post-edit-lint": {
+    "enabled": false,
+    "PostToolUse": [
+      {
+        "matcher": "edit_file|write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"console.log('{}')\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}
