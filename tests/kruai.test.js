@@ -418,3 +418,36 @@ test('role-asisten skill documents /role-asisten update reconciliation workflow'
   assert.match(asistenSkill, /--dry-run/);
   assert.match(asistenSkill, /docs\/decisions\.md/);
 });
+
+test('Proyek Animasi Video v1 Beta: reference, /role-asisten video routing, and README docs', () => {
+  const videoRefPath = path.join(REPO_ROOT, '.agents', 'references', 'video-animation-v1-beta.md');
+  assert.equal(fs.existsSync(videoRefPath), true, 'Missing .agents/references/video-animation-v1-beta.md');
+
+  const videoRef = fs.readFileSync(videoRefPath, 'utf8');
+  for (const requiredToken of [
+    'Stack Disclosure Gate',
+    'Safe Zone',
+    'Contact Sheet',
+    'role-director',
+    'role-animator',
+    'role-producer',
+  ]) {
+    assert.equal(
+      videoRef.includes(requiredToken),
+      true,
+      `Missing '${requiredToken}' in video-animation-v1-beta.md`
+    );
+  }
+
+  const asistenSkill = fs.readFileSync(
+    path.join(REPO_ROOT, '.agents', 'skills', 'role-asisten', 'SKILL.md'),
+    'utf8'
+  );
+  assert.match(asistenSkill, /\/role-asisten video/);
+  assert.match(asistenSkill, /video-animation-v1-beta\.md/);
+  assert.match(asistenSkill, /Domain Lock/);
+
+  const readmeContent = fs.readFileSync(path.join(REPO_ROOT, 'README.md'), 'utf8');
+  assert.match(readmeContent, /\/role-asisten video/);
+  assert.match(readmeContent, /v1 Beta/);
+});

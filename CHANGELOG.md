@@ -11,6 +11,16 @@ Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1
 
 ## [Unreleased]
 
+### Ditambahkan (Added)
+- **Jalur Uji Coba Proyek Animasi Video (`v1 Beta`):**
+  - `.agents/references/video-animation-v1-beta.md`: Referensi *on-demand* (0 beban token pada proyek web) berisi *Domain Lock Beta*, 5 paket iklan produk fisik siap pilih, matriks 5 stack video + ***Stack Disclosure Gate***, arsitektur multi-scene frame lokal `0`, 6 aturan wajib *Anti-AI-Slop* `1080 × 1920`, Audit 2 Lapis (*Contact Sheet*), dan alur 6 peran video beta (`role-asisten`, `role-director`, `role-animator`, `role-inspektur`, `role-producer`, `role-onboard`).
+  - `tests/kruai.test.js`: Menambahkan test otomatis untuk kelengkapan referensi `video-animation-v1-beta.md`, routing `/role-asisten video`, dan dokumentasi `v1 Beta` di `README.md`.
+
+### Diubah (Changed)
+- **`.agents/skills/role-asisten/SKILL.md`:** Menambahkan routing cepat `/role-asisten video` (dan `/role-asisten animasi`), *Domain Lock Beta*, serta seksi panduan alur `Jalur Proyek Animasi Video (/role-asisten video — v1 Beta)` yang otomatis melewati wawancara website.
+- **`.agents/roster.md`:** Menambahkan tautan ke [references/video-animation-v1-beta.md](./references/video-animation-v1-beta.md).
+- **`README.md`:** Menambahkan cara memanggil `/role-asisten video` langsung ke jalur animasi video (bukan web), seksi khusus **Proyek Animasi Video (v1 Beta — Eksperimental)**, tautan perpustakaan referensi baru, serta roadmap menuju `Core + Exclusive Profile Pack (v0.3.0)`.
+
 ---
 
 ## [0.2.1] - 2026-11-27

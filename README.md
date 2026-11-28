@@ -42,7 +42,8 @@ npx github:kangjessydev/kruai doctor
 
 Setelah terpasang, buka proyek di **Google Antigravity IDE**, **Cursor**, atau **GitHub Copilot**, lalu panggil di chat:
 ```text
-/role-asisten
+/role-asisten          # Proyek Website / Aplikasi (Default)
+/role-asisten video    # Proyek Animasi Video — Iklan Produk Fisik (v1 Beta)
 ```
 
 ### 🔄 Memperbarui KruAI di Proyek yang Sedang Jalan (Smart Update)
@@ -144,6 +145,34 @@ Ketik `/role` di antarmuka chat AI Anda untuk memanggil kru:
 
 ---
 
+## 🎬 Proyek Animasi Video (`v1 Beta` — Eksperimental)
+
+> [!NOTE]
+> **Status `v1 Beta` (Jalur Uji Coba Non-Web):**  
+> Fokus utama starter KruAI saat ini masih pada proyek **Website & Aplikasi**. Untuk pengguna yang ingin bereksperimen membuat **video iklan produk fisik berbasis kode** (misalnya dengan Remotion, Motion Canvas, Blender Python `bpy`, atau FFmpeg), tersedia jalur khusus **`v1 Beta`** yang langsung melewati alur website dan mengunci proyek agar tidak bercampur aduk dengan kode web.  
+> Pemisahan paket profil fisik penuh (`--profile web` / `--profile video-animation`) direncanakan hadir pada **`v0.3.0`**.
+
+### Cara Memanggil Langsung ke Proyek Animasi Video (Bukan ke Web)
+1. Buat **folder proyek baru terpisah** (jangan digabung dengan folder proyek website Anda) dan pasang KruAI:
+   ```bash
+   mkdir proyek-animasi-v1-beta && cd proyek-animasi-v1-beta
+   npx github:kangjessydev/kruai init
+   ```
+2. Di chat IDE (**Antigravity / Cursor / Copilot**), panggil langsung:
+   ```text
+   /role-asisten video
+   ```
+   *(alias yang juga didukung: `/role-asisten animasi`)*
+
+### Apa yang Terjadi Saat `/role-asisten video` Dipanggil?
+- **Auto-Skip Jalur Web & *Domain Lock Beta*:** Asisten membaca [references/video-animation-v1-beta.md](.agents/references/video-animation-v1-beta.md) secara *on-demand* (0 beban token pada proyek website), mengunci `Domain: video-animation (v1 Beta)` di `docs/project-brief.md`, dan langsung melewati seluruh wawancara website/database/frontend.
+- **Anti *Blank-Page* (5 Paket Rekomendasi):** Jika Anda belum punya bayangan gaya video, asisten menawarkan 5 paket iklan produk fisik siap pilih (*E-Commerce Punchy 2D*, *Premium Showcase*, *Explainer Vektor*, *UGC/AI Video Hybrid*, hingga *Luxury 3D Hybrid*).
+- ***Stack Disclosure Gate*:** Sebelum menyetujui stack, asisten wajib menjelaskan secara transparan **biaya & lisensi** (misal Remotion gratis `$0` untuk individu/tim ≤ 3 anggota dan berbayar untuk ≥ 4 anggota, Motion Canvas & Manim `MIT` gratis, Blender `bpy` hasil render bebas komersial), **akun/API eksternal**, **kebutuhan lokal** (Node.js/FFmpeg/GPU), dan **daftar aset** yang perlu disiapkan.
+- **Alur 6 Peran Video & Hemat Token:** `role-asisten` → `role-director` (kunci copy + `docs/contract/storyboard.md`) → `role-animator` (komponen modular ber-frame lokal `0` maksimal ~120 baris/scene & *Phase-Gating*) → `role-inspektur` (Audit Lapis 1 CLI + Audit Lapis 2 **1 gambar *Contact Sheet*** terhadap 6 aturan *Anti-AI-Slop* termasuk *Safe Zone* Reels/TikTok) → `role-producer` (ekspor MP4 + verifikasi `ffprobe` dengan izin eksplisit user).
+- **Paket Uji Coba yang Disarankan untuk Pemula:** **Remotion** (100% lokal, `$0` ≤ 3 orang, 0 akun API eksternal), **1 produk fisik kemasan botol/tunggal** (serum, parfum, minuman botol, tumbler), format vertikal **`9:16` (`1080 × 1920`, `30 FPS`, `15 detik`)** dalam 4 scene modular + 1 file musik `.mp3` lokal bebas royalti.
+
+---
+
 ## 📚 Perpustakaan Referensi Terbuka (Atribusi Transparan)
 
 KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak:
@@ -152,6 +181,7 @@ KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak
 * **Arsitektur Backend & Database:** Diadopsi dari *agent-skills-hub* & *Supabase Postgres Best Practices* ([references/backend-architecture-best-practices.md](.agents/references/backend-architecture-best-practices.md)).
 * **Keamanan Transaksi, Concurrency & State:** Prinsip *Zero-Trust Payload*, *ACID Row Locking*, *Payment Webhook State Machine*, *Cache Hygiene*, & *External API Contract Check* ([references/transaction-and-state-security.md](.agents/references/transaction-and-state-security.md)).
 * **Panduan Model Orchestrator & Lifecycle Hooks:** Panduan memilih `Orchestrator (Neon/Argon)` vs `Hydrogen` dan konfigurasi `.agents/hooks.json` ([references/orchestrator-and-hooks-guide.md](.agents/references/orchestrator-and-hooks-guide.md)).
+* **Panduan Proyek Animasi Video (`v1 Beta`):** Matriks 5 stack video, *Stack Disclosure Gate*, arsitektur multi-scene frame lokal, standar *Anti-AI-Slop* `9:16`, dan Audit *Contact Sheet* ([references/video-animation-v1-beta.md](.agents/references/video-animation-v1-beta.md)).
 * **Matriks Spesifikasi Fitur:** Pola Generik Lintas Domain (*CRUD Admin*, *Dashboard/Reporting*, *File Upload*) & modul Auth, Katalog, Checkout, Media Studio ([references/feature-matrix.md](.agents/references/feature-matrix.md)).
 * **Multi-Dimensional Design Tokens:** Gaya desain independen (Minimalist, Luxury, Studio Dark, Neo-Brutalism) ([references/design-styles.md](.agents/references/design-styles.md)).
 
@@ -169,7 +199,8 @@ KruAI mengadopsi standar rekayasa kelas dunia secara terbuka tanpa klaim sepihak
 ## 🗺️ Roadmap Distribusi
 
 - [x] **Fase 1: Core Agent Roles & Protocol** (Selesai — Struktur `.agents/` lokal teruji).
-- [x] **Fase 2: NPM CLI Scaffolder (`bin/kruai.js`)** (Selesai — Mendukung `init`, `update`, `doctor`, Multi-IDE `--ide`, `--with-hooks`, dan test suite `node:test`, siap publish ke npm).
+- [x] **Fase 2: NPM CLI Scaffolder (`bin/kruai.js`)** (Selesai — Mendukung `init`, `update`, `doctor`, Smart Update, Multi-IDE `--ide`, `--with-hooks`, dan test suite `node:test`).
+- [ ] **Fase 2.5 (`v0.3.0`): Core + Exclusive Profile Pack (`--profile web|video-animation`)** (Pemisahan profil fisik penuh agar tiap proyek 100% terisolasi domain; jalur uji coba `/role-asisten video` **v1 Beta** sudah tersedia saat ini).
 - [ ] **Fase 3: KruAI MCP Server** (Menyediakan server Model Context Protocol terpusat di GitHub dengan shared learning database).
 
 ---

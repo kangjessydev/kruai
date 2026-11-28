@@ -13,6 +13,7 @@ Ketik `/role` di chat untuk melihat peran yang sudah ada. Mulai hampir selalu da
 - Katalog gaya tipografi: [references/typography-styles.md](./references/typography-styles.md)
 - Panduan standar animasi/motion: [references/motion-guidelines.md](./references/motion-guidelines.md)
 - Matriks spesifikasi fitur & Production DoD: [references/feature-matrix.md](./references/feature-matrix.md)
+- Panduan Proyek Animasi Video (**v1 Beta**): [references/video-animation-v1-beta.md](./references/video-animation-v1-beta.md)
 
 Status: ✅ ada · 📝 direncanakan
 

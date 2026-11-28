@@ -17,7 +17,11 @@ Ikuti `.agents/rules/team-protocol.md`.
   - Jika user menyetujui: peran dapat mengeksekusi secara berkelanjutan hingga kriteria selesai tercapai.
   - Jika user tidak menyetujui: peran wajib berhenti dan meminta persetujuan di setiap langkah.
 
-## Alur Kerja (Bisa dipanggil via `/role-asisten`, `/role-asisten start`, `/role-asisten update`, atau `/role-asisten web <jenis-website>`)
+## Alur Kerja (Bisa dipanggil via `/role-asisten`, `/role-asisten start`, `/role-asisten update`, `/role-asisten web <jenis-website>`, atau `/role-asisten video [v1 beta]`)
+
+0. **Routing Domain Cepat (Jalur Video Animasi vs Website):**
+   - Jika user memanggil `/role-asisten video` atau `/role-asisten animasi`, **atau** `docs/project-brief.md` sudah memuat `Domain: video-animation`, **langsung lompat ke seksi `Jalur Proyek Animasi Video (/role-asisten video — v1 Beta)`** di bawah dan **LEWATI seluruh wawancara website (Langkah 2.A–2.F)**.
+   - ***Domain Lock Beta (Anti Campur Aduk):*** Jika proyek saat ini sudah terkunci sebagai proyek website (`docs/project-brief.md` mencantumkan jenis website atau sudah memiliki kode aplikasi web), lalu user meminta membangun video animasi di repo yang sama, tolak secara sopan dan arahkan membuat folder proyek baru (contoh: `mkdir proyek-animasi-v1-beta && cd proyek-animasi-v1-beta && npx github:kangjessydev/kruai init`) lalu panggil `/role-asisten video`. Begitu pula sebaliknya: proyek `video-animation` dilarang dicampur membangun website di repo yang sama.
 
 1. **Cek Konteks Proyek, Pilih Mode Kerja & Audit `.agents/` Eksisting:**
    - **A. Audit Kesehatan & Sidik Jari Folder `.agents/`:**
@@ -112,6 +116,19 @@ Gunakan alur ini saat user ingin memperbarui KruAI di tengah proyek berjalan tan
    - Jalankan `npx github:kangjessydev/kruai update` (berkas `KONFLIK LOKAL` otomatis dilewati/dipertahankan oleh CLI).
    - Lakukan penggabungan terkendali hanya pada berkas konflik yang disetujui user dan selaraskan `docs/conventions.md` bila diperlukan tanpa melanggar `docs/decisions.md`.
    - Verifikasi hasil akhir dengan `npx github:kangjessydev/kruai doctor`.
+
+## Jalur Proyek Animasi Video (`/role-asisten video` — `v1 Beta`)
+Gunakan jalur khusus ini saat user memanggil `/role-asisten video` atau `/role-asisten animasi`, atau saat proyek bertanda `Domain: video-animation` di `docs/project-brief.md`:
+1. **Baca Referensi *On-Demand*:** Baca `.agents/references/video-animation-v1-beta.md` secara penuh (hanya dibaca pada jalur video agar proyek website tetap 0 beban token).
+2. **Terapkan *Domain Lock Beta*:** Pastikan proyek berjalan di folder terpisah dari website, tandai `Domain: video-animation (v1 Beta)` di `docs/project-brief.md`, dan **lewati seluruh wawancara website** (`website-archetypes.md`, `anti-ai-slop-ui.md`, serta peran `role-database`/`role-backend`/`role-frontend`).
+3. **Deteksi Mode Kerja Video:**
+   - **Folder kosong / belum ada kode video (*Mode Greenfield Video*):** Gali produk fisik, format rasio (`9:16` / `16:9` / `1:1`), durasi, dan audio. Jika user belum punya bayangan, sodorkan **5 Paket Iklan Siap Pilih** dari referensi (`Paket 1 E-Commerce Punchy` sebagai rekomendasi pilot pertama).
+   - **Sudah ada kode video (*Mode Brownfield Video*):** Lewati wawancara dasar dan fokus pada revisi/penambahan scene, pembaruan aset/data, atau verifikasi render.
+4. **Jalankan *Stack Disclosure Gate* (Wajib Sebelum Konfirmasi):**
+   - Bantu user memilih stack dari **Matriks 5 Stack Video** (Remotion, Motion Canvas, Blender `bpy`, Manim CE, atau FFmpeg), lalu **WAJIB** paparkan 4 poin sebelum menyetujui: **(1) Biaya & lisensi komersial** (mis. Remotion gratis ≤ 3 total anggota perusahaan, ≥ 4 anggota berbayar; Motion Canvas MIT gratis), **(2) Akun/API eksternal yang dibutuhkan**, **(3) Software/hardware lokal**, dan **(4) Checklist aset dari user** (termasuk opsi aset *placeholder* SVG sementara untuk uji teknis awal).
+5. **Kunci Dokumen & Jalankan Alur 6 Peran Video Beta:**
+   - Susun `docs/project-brief.md` dan `docs/conventions.md` (termasuk aturan modular frame lokal `0`, 6 aturan *Anti-AI-Slop*, dan Audit 2 Lapis *Contact Sheet*), lalu tunggu konfirmasi user.
+   - Arahkan fase eksekusi berurutan: `role-director` (kunci copy & `docs/contract/storyboard.md`) → `role-animator` (pondasi & 1–2 scene per fase) → `role-inspektur` (Audit Lapis 1 CLI + Audit Lapis 2 *Contact Sheet*) → `role-producer` (cek dependensi, izin eksplisit sebelum render final/berbayar, ekspor MP4 + `ffprobe`). Jika user ingin memanggil `role-director`, `role-animator`, atau `role-producer` sebagai slash command lokal proyek ini, tawarkan opsi membuatkan `SKILL.md` lokalnya terlebih dahulu sesuai aturan pembuatan peran baru dengan izin eksplisit user.
 
 ## Hindari
 - Terlalu cerewet: maksimal beberapa pertanyaan sekaligus.
